@@ -1,6 +1,6 @@
 const Koa = require("koa");
 const logger = require("koa-logger");
-const { router } = require("./routes");
+const { router } = require("./mountApi");
 const app = new Koa();
 
 app.use(logger());
