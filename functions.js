@@ -1,7 +1,8 @@
 const debug = require("debug")("mock:server");
 const config = require("config");
 const _ = require("lodash");
-let routerMap = {}; // 存放路由映射
+const { defaultContentType, routerMapFilename } = config;
+const fs = require("fs");
 
 const splitFilePathByDot = filePath => _.split(filePath, ".");
 const splitFilePathByUnderline = filePath =>
@@ -33,29 +34,33 @@ const addApiConfToMap = (projectApiPath, apiConf) => {
 
 const registerApiByFolder = ({ projectApiPath, item }) => {
   return (ctx, next) => {
-    try {
-      const jsonStr = fs.readFileSync(item).toString();
-      const headerStr = fs
-        .readFileSync(item.split(".")[0] + ".header")
-        .toString();
-      ctx.set("Access-Control-Allow-Origin", "*");
-      const apiConf = genApiConf({ projectApiPath, jsonStr, ctx });
-      ctx.body = apiConf.body;
-      ctx.res.setHeader(
-        "Content-Type",
-        getContentTypeByFilenameSuffix(projectApiPath) ||
-          config.get("defaultContentType")
-      );
-      routerMap[projectApiPath] = apiConf;
-    } catch (err) {
-      ctx.throw("服务器错误", 500);
-    }
+    debug(` projectApiPath : ${projectApiPath}, item: ${item}, ctx: ${ctx}`);
+    // try {
+    // let jsonStr = fs.readFileSync(item).toString();
+    let jsonStr = { age: 12 };
+    debug(`jsonStr: ${jsonStr}`);
+    const headerStr = { name: "rob" };
+    // const headerStr = fs
+    // .readFileSync(item.split(".")[0] + ".header")
+    // .toString();
+    ctx.set("Access-Control-Allow-Origin", "*");
+    // genApiConf({ projectApiPath, jsonStr, ctx });
+    const apiConf = genApiConf({ projectApiPath, jsonStr, headerStr });
+    ctx.body = apiConf.body;
+    ctx.res.setHeader(
+      "Content-Type",
+      getContentTypeByFilenameSuffix(projectApiPath) || defaultContentType
+    );
+    // routerMap[projectApiPath] = apiConf;
+    // } catch (err) {
+    //   ctx.throw(`服务器错误 : ${JSON.stringify(err)}`, 500);
+    // }
   };
 };
 
 const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
   const body = jsonStr;
-  const headers = JSON.parse(headerStr);
+  const headers = headerStr;
   const httpCode = getHttpCodeByFilename(projectApiPath);
   return { headers, body, httpCode };
 };
@@ -66,8 +71,7 @@ const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
 //   ctx.set("Access-Control-Allow-Origin", "*");
 //   ctx.res.setHeader(
 //     "Content-Type",
-//     getContentTypeByFilenameSuffix(projectApiPath) ||
-//       config.get("defaultContentType")
+//     getContentTypeByFilenameSuffix(projectApiPath) || defaultContentType
 //   );
 // };
 // const contentTypeConsts = ["xml", "json", "text/plain"];
@@ -87,15 +91,11 @@ const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
 
 const recordApiMap = routerMap => {
   // 记录路由
-  fs.writeFile(
-    config.get("routerMapFilename"),
-    JSON.stringify(routerMap, null, 4),
-    err => {
-      if (!err) {
-        console.log("路由地图生成成功！");
-      }
+  fs.writeFile(routerMapFilename, JSON.stringify(routerMap, null, 4), err => {
+    if (!err) {
+      console.log("路由地图生成成功！");
     }
-  );
+  });
 };
 
 const autoParse = () => {
