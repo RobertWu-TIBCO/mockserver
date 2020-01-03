@@ -6,63 +6,64 @@ const fs = require("fs");
 
 const splitFilePathByDot = filePath => _.split(filePath, ".");
 const splitFilePathByUnderline = filePath =>
-  _.split(splitFilePathByDot(filePath)[0], "_");
+    _.split(splitFilePathByDot(filePath)[0], "_");
 const getLastElementInArray = stringArray =>
-  stringArray[stringArray.length - 1];
+    stringArray[stringArray.length - 1];
 const getFilenameSuffix = filePath =>
-  getLastElementInArray(splitFilePathByDot(filePath));
+    getLastElementInArray(splitFilePathByDot(filePath));
 const contentTypeConstsArray = [
-  "application/xml",
-  "application/json",
-  "application/xhtml",
-  "application/octo-stream",
-  "text/plain"
+    "application/xml",
+    "application/json",
+    "application/xhtml",
+    "application/octo-stream",
+    "text/plain"
 ];
+
 function containsStr(str) {
-  return new RegExp(str, "ig").test(this);
+    return new RegExp(str, "ig").test(this);
 }
 const getContentTypeByFilenameSuffix = filePath =>
-  contentTypeConstsArray.filter(e =>
-    containsStr.call(e, getFilenameSuffix(filePath))
-  );
+    contentTypeConstsArray.filter(e =>
+        containsStr.call(e, getFilenameSuffix(filePath))
+    );
 
 const getHttpCodeByFilename = filePath => splitFilePathByUnderline(filePath)[1];
 
 const addApiConfToMap = (projectApiPath, apiConf) => {
-  projectApiPath: apiConf;
+    projectApiPath: apiConf;
 };
 
 const registerApiByFolder = ({ projectApiPath, item }) => {
-  return (ctx, next) => {
-    debug(` projectApiPath : ${projectApiPath}, item: ${item}, ctx: ${ctx}`);
-    // try {
-    // let jsonStr = fs.readFileSync(item).toString();
-    let jsonStr = { age: 12 };
-    debug(`jsonStr: ${jsonStr}`);
-    const headerStr = { name: "rob" };
-    // const headerStr = fs
-    // .readFileSync(item.split(".")[0] + ".header")
-    // .toString();
-    ctx.set("Access-Control-Allow-Origin", "*");
-    // genApiConf({ projectApiPath, jsonStr, ctx });
-    const apiConf = genApiConf({ projectApiPath, jsonStr, headerStr });
-    ctx.body = apiConf.body;
-    ctx.res.setHeader(
-      "Content-Type",
-      getContentTypeByFilenameSuffix(projectApiPath) || defaultContentType
-    );
-    // routerMap[projectApiPath] = apiConf;
-    // } catch (err) {
-    //   ctx.throw(`服务器错误 : ${JSON.stringify(err)}`, 500);
-    // }
-  };
+    return (ctx, next) => {
+        debug(` projectApiPath : ${projectApiPath}, item: ${item}, ctx: ${ctx}`);
+        // try {
+        let jsonStr = fs.readFileSync(item).toString();
+        // let jsonStr = { age: 12 };
+        debug(`jsonStr: ${jsonStr}`);
+        const headerStr = { name: "rob" };
+        // const headerStr = fs
+        // .readFileSync(item.split(".")[0] + ".header")
+        // .toString();
+        ctx.set("Access-Control-Allow-Origin", "*");
+        // genApiConf({ projectApiPath, jsonStr, ctx });
+        const apiConf = genApiConf({ projectApiPath, jsonStr, headerStr });
+        ctx.body = apiConf.body;
+        ctx.res.setHeader(
+            "Content-Type",
+            getContentTypeByFilenameSuffix(projectApiPath) || defaultContentType
+        );
+        // routerMap[projectApiPath] = apiConf;
+        // } catch (err) {
+        //   ctx.throw(`服务器错误 : ${JSON.stringify(err)}`, 500);
+        // }
+    };
 };
 
 const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
-  const body = jsonStr;
-  const headers = headerStr;
-  const httpCode = getHttpCodeByFilename(projectApiPath);
-  return { headers, body, httpCode };
+    const body = jsonStr;
+    const headers = headerStr;
+    const httpCode = getHttpCodeByFilename(projectApiPath);
+    return { headers, body, httpCode };
 };
 
 // const genApiConf = ({ projectApiPath, jsonStr, ctx }) => {
@@ -90,28 +91,28 @@ const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
 // };
 
 const recordApiMap = routerMap => {
-  // 记录路由
-  fs.writeFile(routerMapFilename, JSON.stringify(routerMap, null, 4), err => {
-    if (!err) {
-      console.log("路由地图生成成功！");
-    }
-  });
+    // 记录路由
+    fs.writeFile(routerMapFilename, JSON.stringify(routerMap, null, 4), err => {
+        if (!err) {
+            console.log("路由地图生成成功！");
+        }
+    });
 };
 
 const autoParse = () => {
-  const acorn = require("acorn");
-  const fs = require("fs");
-  const program = fs.readFileSync(__filename, "utf8");
-  const parsed = acorn.parse(program);
-  parsed.body.forEach(fn => {
-    if (fn.type.endsWith("VariableDeclaration")) {
-      const fnv = fn.declarations[0];
-      module.exports[fnv.id.name] = eval(fnv.id.name);
-    }
-    if (fn.type.endsWith("FunctionDeclaration")) {
-      module.exports[fn.id.name] = eval(fn.id.name);
-    }
-  });
+    const acorn = require("acorn");
+    const fs = require("fs");
+    const program = fs.readFileSync(__filename, "utf8");
+    const parsed = acorn.parse(program);
+    parsed.body.forEach(fn => {
+        if (fn.type.endsWith("VariableDeclaration")) {
+            const fnv = fn.declarations[0];
+            module.exports[fnv.id.name] = eval(fnv.id.name);
+        }
+        if (fn.type.endsWith("FunctionDeclaration")) {
+            module.exports[fn.id.name] = eval(fn.id.name);
+        }
+    });
 };
 
 autoParse();
