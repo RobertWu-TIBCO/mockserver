@@ -38,20 +38,21 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
     try {
       let jsonStr = fs.readFileSync(item);
       debug(`jsonStr: ${jsonStr}`);
-      const headerStr = { name: "rob" };
-      //   const headerStr = fs.readFileSync(item.split(".")[0] + ".header");
+      const apiHeaderFile = item.split(".")[0] + ".header";
+      const headerStr =
+        (fs.existsSync(apiHeaderFile) && fs.readFileSync(apiHeaderFile)) ||
+        JSON.stringify({ "x-ua": "curl" });
+      debug(`headerStr: ${headerStr}`);
       ctx.set("Access-Control-Allow-Origin", "*");
       const { contentType, headers, body, httpCode } = genApiConf({
         projectApiPath,
         jsonStr,
         headerStr
       });
-      debug(
-        `contentType: ${contentType}, headers: ${JSON.stringify(
-          headers
-        )}, body: ${body} , httpCode: ${httpCode}`
-      );
       ctx.res.setHeader("Content-Type", contentType);
+      _.forIn(headers, (value, key) => {
+        ctx.res.setHeader(key, value);
+      });
       ctx.body = body;
       ctx.res.statusCode = httpCode;
     } catch (err) {
@@ -62,8 +63,11 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
 
 const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
   const body = jsonStr;
-  const headers = headerStr;
-  const httpCode = getHttpCodeByFilename(projectApiPath);
+  const headers = JSON.parse(headerStr);
+  const httpCode =
+    (containsStr.call(projectApiPath, "_") &&
+      getHttpCodeByFilename(projectApiPath)) ||
+    200;
   const contentType = getContentTypeByFilenameSuffix(projectApiPath);
   return {
     contentType: (contentType.length && contentType) || defaultContentType,
