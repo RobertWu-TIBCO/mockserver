@@ -97,3 +97,21 @@ const recordApiMap = routerMap => {
     }
   );
 };
+
+const autoParse = () => {
+  const acorn = require("acorn");
+  const fs = require("fs");
+  const program = fs.readFileSync(__filename, "utf8");
+  const parsed = acorn.parse(program);
+  parsed.body.forEach(fn => {
+    if (fn.type.endsWith("VariableDeclaration")) {
+      const fnv = fn.declarations[0];
+      module.exports[fnv.id.name] = eval(fnv.id.name);
+    }
+    if (fn.type.endsWith("FunctionDeclaration")) {
+      module.exports[fn.id.name] = eval(fn.id.name);
+    }
+  });
+};
+
+autoParse();
