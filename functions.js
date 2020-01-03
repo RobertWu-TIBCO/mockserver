@@ -35,20 +35,25 @@ const addApiConfToMap = (projectApiPath, apiConf) => {
 
 const registerApiByFolder = ({ projectApiPath, item }) => {
   return (ctx, next) => {
-    debug(` projectApiPath : ${projectApiPath}, item: ${item}, ctx: ${ctx}`);
     try {
-      let jsonStr = fs.readFileSync(item).toString();
-      // let jsonStr = { age: 12 };
+      let jsonStr = fs.readFileSync(item);
       debug(`jsonStr: ${jsonStr}`);
       const headerStr = { name: "rob" };
-      // const headerStr = fs
-      // .readFileSync(item.split(".")[0] + ".header")
-      // .toString();
+      //   const headerStr = fs.readFileSync(item.split(".")[0] + ".header");
       ctx.set("Access-Control-Allow-Origin", "*");
-      const apiConf = genApiConf({ projectApiPath, jsonStr, headerStr });
-      ctx.res.setHeader("Content-Type", apiConf.contentType);
-      ctx.body = apiConf.body;
-      ctx.res.status = apiConf.httpCode;
+      const { contentType, headers, body, httpCode } = genApiConf({
+        projectApiPath,
+        jsonStr,
+        headerStr
+      });
+      debug(
+        `contentType: ${contentType}, headers: ${JSON.stringify(
+          headers
+        )}, body: ${body} , httpCode: ${httpCode}`
+      );
+      ctx.res.setHeader("Content-Type", contentType);
+      ctx.body = body;
+      ctx.res.statusCode = httpCode;
     } catch (err) {
       ctx.throw(`服务器错误 : ${JSON.stringify(err)}`, 500);
     }
@@ -67,15 +72,6 @@ const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
     httpCode
   };
 };
-
-// const setCtxBody = ({ jsonStr}) => {
-//   "packagedContent" : {
-//     "data": JSON.parse(jsonStr),
-//     "state": 200,
-//     "type": "success" // 自定义响应体
-//   },
-//   "flatContent": jsonStr;
-// };
 
 const recordApiMap = routerMap => {
   // 记录路由
