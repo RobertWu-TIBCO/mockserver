@@ -1,8 +1,8 @@
-const debug = require("debug")("mock:server");
-const config = require("config");
-const _ = require("lodash");
-const { defaultContentType, routerMapFilename } = config;
-const fs = require("fs");
+const debug = require("debug")("mock:server"),
+    config = require("config"),
+    fs = require("fs"),
+    _ = require("lodash"),
+    { defaultContentType, routerMapFilename } = config;
 
 const splitFilePathByDot = filePath => _.split(filePath, ".");
 const splitFilePathByUnderline = filePath =>
