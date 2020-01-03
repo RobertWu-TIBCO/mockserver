@@ -48,9 +48,10 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
         // genApiConf({ projectApiPath, jsonStr, ctx });
         const apiConf = genApiConf({ projectApiPath, jsonStr, headerStr });
         ctx.body = apiConf.body;
+        const contentType = getContentTypeByFilenameSuffix(projectApiPath);
         ctx.res.setHeader(
             "Content-Type",
-            getContentTypeByFilenameSuffix(projectApiPath) || defaultContentType
+            (contentType.length && contentType) || defaultContentType
         );
         // routerMap[projectApiPath] = apiConf;
         // } catch (err) {
