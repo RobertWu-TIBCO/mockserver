@@ -15,7 +15,7 @@ const contentTypeConstsArray = [
   "application/xml",
   "application/json",
   "application/xhtml",
-  "application/octo-stream",
+  "application/octet-stream",
   "text/plain"
 ];
 
