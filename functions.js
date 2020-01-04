@@ -40,8 +40,7 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
       debug(`jsonStr: ${jsonStr}`);
       const apiHeaderFile = item.split(".")[0] + ".header";
       const headerStr =
-        (fs.existsSync(apiHeaderFile) && fs.readFileSync(apiHeaderFile)) ||
-        JSON.stringify({ "x-ua": "curl" });
+        fs.existsSync(apiHeaderFile) && fs.readFileSync(apiHeaderFile);
       debug(`headerStr: ${headerStr}`);
       ctx.set("Access-Control-Allow-Origin", "*");
       const { contentType, headers, body, httpCode } = genApiConf({
@@ -61,9 +60,10 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
   };
 };
 
-const genApiConf = ({ projectApiPath, jsonStr, headerStr }) => {
+const genApiConf = ({ projectApiPath, jsonStr, headerStr = "{}" }) => {
   const body = jsonStr;
   const headers = JSON.parse(headerStr);
+  // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
     (containsStr.call(projectApiPath, "_") &&
       getHttpCodeByFilename(projectApiPath)) ||
