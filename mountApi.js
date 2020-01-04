@@ -18,7 +18,7 @@ glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
   const projectApiPath = item && item.split(splitPathPrefix)[1];
   debug(`item : ${item},  projectApiPath: ${projectApiPath}`);
   router.all(projectApiPath, fp.registerApiByFolder({ projectApiPath, item }));
-  routerMap[projectApiPath] = projectApiPath;
+  routerMap[splitPathPrefix + projectApiPath] = mockApiPrefix + projectApiPath;
 });
 
 fp.recordApiMap(routerMap);
