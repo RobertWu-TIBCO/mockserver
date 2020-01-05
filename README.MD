@@ -1,4 +1,10 @@
-### mock server advantages
+# mock server
+
+A tiny nodejs framework using koa routers to map local folder and files to mock apis .
+
+Allows custom http code, headers, body, content-type by file name and extensions.
+
+## mock server advantages
 
 [x] register all api base on file path and name
 [x] support http header content-type by file name extension and default content-type, i.e, "users.json" or "alter.xml"
@@ -12,17 +18,19 @@
 [x] support custom path scan by localMockPath
 [x] support control of inherit from project header file by mergeFolderHeader
 
-### start
+## start
 
 npm install
 
 nodemon app.js
 
-### test apis
+## test apis
 
 bash testAllApis.sh
 
-#### read user defined env variables mockFileFilter, localMockPath, mockApiPrefix to define which folder and files to scan and map to apis
+## project use examples
+
+### read user defined env variables mockFileFilter, localMockPath, mockApiPrefix to define which folder and files to scan and map to apis
 
 "mockApiPrefix": "/mock", // mock api prefix will show up in final url as prefix
 "mockFileFilter": "\*.json", // file filter, i.e, `*, *.json, *.xml`
@@ -62,7 +70,7 @@ user1_302.header
 
 #### header content
 
-```
+```bash
 1140 $ cat user1_302.header
 {
     "token":"QiagNT12rRz7y9",
@@ -70,7 +78,7 @@ user1_302.header
 }
 ```
 
-```
+```bash
 1143 $ cat project.header
 {
     "x-iac-token": "robert_iac"
@@ -79,7 +87,7 @@ user1_302.header
 
 #### body content
 
-```
+```bash
 1141 $ cat user1_302.json
 {
     "name": "wuyang",
@@ -90,7 +98,7 @@ user1_302.header
 
 #### curl response
 
-```
+```bash
 curl -vsk http://localhost:3000/mock/hack/user1_302.json
 *   Trying ::1...
 * TCP_NODELAY set
