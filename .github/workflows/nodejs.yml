@@ -20,7 +20,7 @@ jobs:
         run: |
           npm i
           npm run build --if-present
-          nohup DEBUG=* node app.js &
+          nohup node app.js &
           sleep 2 && pkill node
         env:
           CI: true
