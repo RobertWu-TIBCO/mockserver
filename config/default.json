@@ -1,7 +1,7 @@
 {
     "mockApiPrefix": "/mock",
     "defaultContentType": "application/json",
-    "mockFiles": "*",
+    "mockFileFilter": "*.json",
     "localMockPath": "api",
     "routerMapFilename": "./routerMap.json"
 }

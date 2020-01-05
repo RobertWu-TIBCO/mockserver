@@ -5,15 +5,15 @@ const glob = require("glob"),
   config = require("config"),
   fp = require("./functions"),
   { resolve } = require("path"),
-  { mockApiPrefix, mockFiles, localMockPath } = config,
+  { mockApiPrefix, mockFileFilter, localMockPath } = config,
   // register route prefix
   router = new Router({ prefix: mockApiPrefix }),
   scanPath = `./${localMockPath}`,
   splitPathPrefix = `/${localMockPath}`,
-  filterFiles = `**/${mockFiles}`;
+  filterFiles = `**/${mockFileFilter}`;
 
 debug(
-  `mockFiles : ${mockFiles}, localMockPath : ${localMockPath}, mockApiPrefix : ${mockApiPrefix}`
+  `mockFileFilter : ${mockFileFilter}, localMockPath : ${localMockPath}, mockApiPrefix : ${mockApiPrefix}`
 );
 glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
   const projectApiPath = item && item.split(splitPathPrefix)[1];
