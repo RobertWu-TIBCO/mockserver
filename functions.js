@@ -2,13 +2,16 @@ const debug = require("debug")("mock:server"),
   config = require("config"),
   fs = require("fs"),
   _ = require("lodash"),
-  { defaultContentType, routerMapFilename } = config;
+  { defaultContentType, routerMapFilename, mergeFolderHeader } = config;
 
 const splitFilePathByDot = filePath => _.split(filePath, ".");
 const splitFilePathByUnderline = filePath =>
   _.split(splitFilePathByDot(filePath)[0], "_");
 const getLastElementInArray = stringArray =>
   stringArray[stringArray.length - 1];
+const getLastElementIndex = stringArray => stringArray.length - 1;
+const replaceLastElementInArray = (stringArray, replacedElement) =>
+  (stringArray[stringArray.length - 1] = replacedElement);
 const getFilenameSuffix = filePath =>
   getLastElementInArray(splitFilePathByDot(filePath));
 const contentTypeConstsArray = [
@@ -33,6 +36,15 @@ const addApiConfToMap = (projectApiPath, apiConf) => {
   projectApiPath: apiConf;
 };
 
+const getProjectHeaderPath = apiHeaderFile => {
+  let apiHeaderSplitArray = apiHeaderFile.split("/");
+  replaceLastElementInArray(apiHeaderSplitArray, "project.header");
+  return apiHeaderSplitArray.join("/");
+};
+
+const safeReadFile = filePath =>
+  fs.existsSync(filePath) && fs.readFileSync(filePath);
+
 const registerApiByFolder = ({ projectApiPath, item }) => {
   return (ctx, next) => {
     try {
@@ -55,9 +67,13 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
 
 const genApiConf = ({ projectApiPath, item }) => {
   const apiHeaderFile = item.split(".")[0] + ".header";
-  const headerStr =
-    fs.existsSync(apiHeaderFile) && fs.readFileSync(apiHeaderFile);
+  const headerStr = safeReadFile(apiHeaderFile);
   debug(`headerStr: ${headerStr}`);
+  const folderHeaderFile = getProjectHeaderPath(apiHeaderFile);
+  const folderHeaderStr = mergeFolderHeader && safeReadFile(folderHeaderFile);
+  const headerObj = JSON.parse(headerStr),
+    folderHeaderObj = JSON.parse(folderHeaderStr);
+  const headers = _.assign(folderHeaderObj, headerObj);
   // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
     (containsStr.call(projectApiPath, "_") &&
@@ -66,8 +82,8 @@ const genApiConf = ({ projectApiPath, item }) => {
   const contentType = getContentTypeByFilenameSuffix(projectApiPath);
   return {
     contentType: (contentType.length && contentType) || defaultContentType,
-    headers: JSON.parse(headerStr),
-    body: fs.readFileSync(item),
+    headers,
+    body: safeReadFile(item),
     httpCode
   };
 };
