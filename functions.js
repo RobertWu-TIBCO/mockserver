@@ -36,18 +36,11 @@ const addApiConfToMap = (projectApiPath, apiConf) => {
 const registerApiByFolder = ({ projectApiPath, item }) => {
   return (ctx, next) => {
     try {
-      let jsonStr = fs.readFileSync(item);
-      debug(`jsonStr: ${jsonStr}`);
-      const apiHeaderFile = item.split(".")[0] + ".header";
-      const headerStr =
-        fs.existsSync(apiHeaderFile) && fs.readFileSync(apiHeaderFile);
-      debug(`headerStr: ${headerStr}`);
-      ctx.set("Access-Control-Allow-Origin", "*");
       const { contentType, headers, body, httpCode } = genApiConf({
         projectApiPath,
-        jsonStr,
-        headerStr
+        item
       });
+      ctx.set("Access-Control-Allow-Origin", "*");
       ctx.res.setHeader("Content-Type", contentType);
       _.forIn(headers, (value, key) => {
         ctx.res.setHeader(key, value);
@@ -60,9 +53,11 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
   };
 };
 
-const genApiConf = ({ projectApiPath, jsonStr, headerStr = "{}" }) => {
-  const body = jsonStr;
-  const headers = JSON.parse(headerStr);
+const genApiConf = ({ projectApiPath, item }) => {
+  const apiHeaderFile = item.split(".")[0] + ".header";
+  const headerStr =
+    fs.existsSync(apiHeaderFile) && fs.readFileSync(apiHeaderFile);
+  debug(`headerStr: ${headerStr}`);
   // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
     (containsStr.call(projectApiPath, "_") &&
@@ -71,8 +66,8 @@ const genApiConf = ({ projectApiPath, jsonStr, headerStr = "{}" }) => {
   const contentType = getContentTypeByFilenameSuffix(projectApiPath);
   return {
     contentType: (contentType.length && contentType) || defaultContentType,
-    headers,
-    body,
+    headers: JSON.parse(headerStr),
+    body: fs.readFileSync(item),
     httpCode
   };
 };

@@ -3,5 +3,7 @@
     "defaultContentType": "application/json",
     "mockFileFilter": "*.json",
     "localMockPath": "api",
-    "routerMapFilename": "./routerMap.json"
+    "routerMapFilename": "./routerMap.json",
+    "useFolderHeader": true,
+    "mergeFolderHeader": true
 }
