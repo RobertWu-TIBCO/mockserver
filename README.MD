@@ -4,12 +4,23 @@
 [x] support http header content-type by file name extension and default content-type, i.e, "users.json" or "alter.xml"
 [x] support file content mapping as api response body
 [ ] support response body warp base on file content
+[ ] support custom project virtual path in final api url
 [x] support http code by file name like "gotoKC_302.json"
 [x] support user specific http header by file name like "gotoKc_302.header" , also inherit from "project.header" as project scope http headers
 [x] support custom mock api prefix by mockApiPrefix
 [x] support custom file scan filter by mockFileFilter
 [x] support custom path scan by localMockPath
 [x] support control of inherit from project header file by mergeFolderHeader
+
+### start
+
+npm install
+
+nodemon app.js
+
+### test apis
+
+bash testAllApis.sh
 
 #### read user defined env variables mockFileFilter, localMockPath, mockApiPrefix to define which folder and files to scan and map to apis
 
