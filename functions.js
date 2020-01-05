@@ -4,16 +4,14 @@ const debug = require("debug")("mock:server"),
   _ = require("lodash"),
   { defaultContentType, routerMapFilename, mergeFolderHeader } = config;
 
-const splitFilePathByDot = filePath => _.split(filePath, ".");
-const splitFilePathByUnderline = filePath =>
-  _.split(splitFilePathByDot(filePath)[0], "_");
-const getLastElementInArray = stringArray =>
-  stringArray[stringArray.length - 1];
-const getLastElementIndex = stringArray => stringArray.length - 1;
-const replaceLastElementInArray = (stringArray, replacedElement) =>
-  (stringArray[stringArray.length - 1] = replacedElement);
-const getFilenameSuffix = filePath =>
-  getLastElementInArray(splitFilePathByDot(filePath));
+const splitPathByDot = filePath => _.split(filePath, ".");
+const splitPathByUnderline = filePath =>
+  _.split(splitPathByDot(filePath)[0], "_");
+const getLastElement = array => array[array.length - 1];
+const getLastElementIndex = array => array.length - 1;
+const replaceLastElement = (array, updateElement) =>
+  (array[array.length - 1] = updateElement);
+const getFileSuffix = filePath => getLastElement(splitPathByDot(filePath));
 const contentTypeConstsArray = [
   "application/xml",
   "application/json",
@@ -25,12 +23,12 @@ const contentTypeConstsArray = [
 function containsStr(str) {
   return new RegExp(str, "ig").test(this);
 }
-const getContentTypeByFilenameSuffix = filePath =>
+const getContentTypeByFileSuffix = filePath =>
   contentTypeConstsArray.filter(e =>
-    containsStr.call(e, getFilenameSuffix(filePath))
+    containsStr.call(e, getFileSuffix(filePath))
   );
 
-const getHttpCodeByFilename = filePath => splitFilePathByUnderline(filePath)[1];
+const getHttpCodeByFilename = filePath => splitPathByUnderline(filePath)[1];
 
 const addApiConfToMap = (projectApiPath, apiConf) => {
   projectApiPath: apiConf;
@@ -38,7 +36,7 @@ const addApiConfToMap = (projectApiPath, apiConf) => {
 
 const getProjectHeaderPath = apiHeaderFile => {
   let apiHeaderSplitArray = apiHeaderFile.split("/");
-  replaceLastElementInArray(apiHeaderSplitArray, "project.header");
+  replaceLastElement(apiHeaderSplitArray, "project.header");
   return apiHeaderSplitArray.join("/");
 };
 
@@ -79,7 +77,7 @@ const genApiConf = ({ projectApiPath, item }) => {
     (containsStr.call(projectApiPath, "_") &&
       getHttpCodeByFilename(projectApiPath)) ||
     200;
-  const contentType = getContentTypeByFilenameSuffix(projectApiPath);
+  const contentType = getContentTypeByFileSuffix(projectApiPath);
   return {
     contentType: (contentType.length && contentType) || defaultContentType,
     headers,
@@ -89,7 +87,6 @@ const genApiConf = ({ projectApiPath, item }) => {
 };
 
 const recordApiMap = routerMap => {
-  // 记录路由
   fs.writeFile(routerMapFilename, JSON.stringify(routerMap, null, 4), err => {
     if (!err) {
       console.log("路由地图生成成功！");

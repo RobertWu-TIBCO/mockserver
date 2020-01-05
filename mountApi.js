@@ -19,6 +19,7 @@ glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
   const projectApiPath = item && item.split(splitPathPrefix)[1];
   debug(`item : ${item},  projectApiPath: ${projectApiPath}`);
   router.all(projectApiPath, fp.registerApiByFolder({ projectApiPath, item }));
+  // 记录路由
   // record api map to a json file with relative file path as key and the final mocked api path as value
   routerMap[splitPathPrefix + projectApiPath] = mockApiPrefix + projectApiPath;
 });
