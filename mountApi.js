@@ -5,7 +5,8 @@ const glob = require("glob"),
   config = require("config"),
   fp = require("./functions"),
   { resolve } = require("path"),
-  { mockFiles, localMockPath, mockApiPrefix } = config,
+  { mockApiPrefix, mockFiles, localMockPath } = config,
+  // register route prefix
   router = new Router({ prefix: mockApiPrefix }),
   scanPath = `./${localMockPath}`,
   splitPathPrefix = `/${localMockPath}`,
@@ -18,6 +19,7 @@ glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
   const projectApiPath = item && item.split(splitPathPrefix)[1];
   debug(`item : ${item},  projectApiPath: ${projectApiPath}`);
   router.all(projectApiPath, fp.registerApiByFolder({ projectApiPath, item }));
+  // key is the file path, value is the final mocked api path
   routerMap[splitPathPrefix + projectApiPath] = mockApiPrefix + projectApiPath;
 });
 
