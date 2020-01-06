@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="GBK"?> 
+<response>   
+   <tbOrderNo>xxx</tbOrderNo> 
+   <bizType>xxx</bizType> 
+   <coopOrderStatus>xxx</coopOrderStatus> 
+   <coopOrderNo>xxx</coopOrderNo> 
+   <errCode>xxx</errCode> 
+   <errDesc>xxx</errDesc> 
+</response>
