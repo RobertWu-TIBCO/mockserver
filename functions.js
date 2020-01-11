@@ -1,6 +1,7 @@
 const debug = require("debug")("mock:server"),
   config = require("config"),
   fs = require("fs"),
+  os = require("os"),
   _ = require("lodash"),
   { defaultContentType, routerMapFilename, mergeFolderHeader } = config;
 
@@ -92,6 +93,14 @@ const recordApiMap = routerMap => {
       console.log("路由地图生成成功！");
     }
   });
+};
+
+const all_interfaces = os.networkInterfaces();
+
+const showWlanIp = () => {
+  const ip = all_interfaces.WLAN[1].address;
+  debug(`your wlan ip is: ${ip}`);
+  return ip;
 };
 
 const autoParse = () => {

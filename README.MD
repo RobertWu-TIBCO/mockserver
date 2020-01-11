@@ -124,3 +124,7 @@ curl -vsk http://localhost:3000/mock/hack/user1_302.json
     "addr": "beijing"
 }
 ```
+
+## TODO
+
+- support .http protocol which takes whole file as a api, containing http code, header and body
