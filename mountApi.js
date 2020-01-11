@@ -5,7 +5,13 @@ const glob = require("glob"),
   config = require("config"),
   fp = require("./functions"),
   { resolve } = require("path"),
-  { mockApiPrefix, mockFileFilter, localMockPath } = config,
+  {
+    mockApiPrefix,
+    mockFileFilter,
+    localMockPath,
+    routerMapFilename,
+    useTestBash
+  } = config,
   // register route prefix
   router = new Router({ prefix: mockApiPrefix }),
   scanPath = `./${localMockPath}`,
@@ -21,16 +27,20 @@ glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
   router.all(projectApiPath, fp.registerApiByFolder({ projectApiPath, item }));
   // 记录路由
   // record api map to a json file with relative file path as key and the final mocked api path as value
-  routerMap[splitPathPrefix + projectApiPath] = {
-    localFile: item,
-    mockApiUrl: `http://${fp.showWlanIp()}:${process.env.PORT ||
-      3000}${mockApiPrefix}${projectApiPath}`
-  };
+  const mockApiUrl = `http://${fp.showWlanIp()}:${process.env.PORT ||
+    3000}${mockApiPrefix}${projectApiPath}`;
+
+  routerMap[splitPathPrefix + projectApiPath] = useTestBash
+    ? mockApiUrl
+    : {
+        localFile: item,
+        mockApiUrl
+      };
 });
 
 fp.recordApiMap(routerMap);
 
-glob.sync(resolve("./", "routerMap.json")).forEach((item, i) => {
+glob.sync(resolve("./", routerMapFilename)).forEach((item, i) => {
   router.all("/", fp.registerApiByFolder({ projectApiPath: item, item }));
 });
 
