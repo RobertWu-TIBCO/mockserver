@@ -4,7 +4,6 @@
     "mockFileFilter": "*",
     "localMockPath": "api",
     "routerMapFilename": "./routerMap.json",
-    "useFolderHeader": true,
     "mergeFolderHeader": true,
     "useTestBash": true
 }

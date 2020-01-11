@@ -11,6 +11,8 @@ Allows custom http code, headers, body, content-type by file name and extensions
 [x] support file content mapping as api response body
 [ ] support response body warp base on file content
 [ ] support custom project virtual path in final api url
+[ ] support .http file as full http response
+[x] support routerMap as mock index url and show all urls in response content
 [x] support http code by file name like "gotoKC_302.json"
 [x] support user specific http header by file name like "gotoKc_302.header" , also inherit from "project.header" as project scope http headers
 [x] support custom mock api prefix by mockApiPrefix
