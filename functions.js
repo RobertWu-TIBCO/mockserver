@@ -54,6 +54,8 @@ const getHTTPBody = fileContent => {
 
 const getHTTPHeaders = fileContent => {
   const content = splitMultiLines(fileContent);
+  const httpHeaderMap = {};
+  return httpHeaderMap;
 };
 
 const getHTTPCode = fileContent => {
@@ -63,6 +65,8 @@ const getHTTPCode = fileContent => {
 };
 const getHTTPContenttype = fileContent => {
   const content = splitMultiLines(fileContent);
+  const contentType = "application/json";
+  return contentType;
 };
 
 const getProjectHeaderPath = apiHeaderFile => {

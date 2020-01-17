@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-11 21:20:52
- * @LastEditTime : 2020-01-17 16:57:46
+ * @LastEditTime : 2020-01-17 17:02:26
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blogg:\Projects\baishan\mockserver\tests\function.test.js
@@ -24,7 +24,7 @@ describe("fp read file", () => {
     //   sleep`;
     // debug(`content : ${content}`);
     // expect(content).toBe(``);
-    expect(httpCode).toBe("302");
+    expect(httpCode).toBe("201");
   });
 });
 

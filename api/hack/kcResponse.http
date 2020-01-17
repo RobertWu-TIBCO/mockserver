@@ -1,4 +1,4 @@
-HTTP/1.1 302 OK
+HTTP/1.1 201 OK
 Content-Type: application/json; charset=utf-8
 
 {"watchingPage":true,"watchingSpace":true,"watchingBlogs":false,"isAdmin":false,"isBlogPost":false}
