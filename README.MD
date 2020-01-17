@@ -24,6 +24,8 @@ Allows custom http code, headers, body, content-type by file name and extensions
 
 npm install
 
+npm i -g nodemon
+
 nodemon app.js
 
 ## test apis
