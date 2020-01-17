@@ -41,23 +41,29 @@ const addApiConfToMap = (projectApiPath, apiConf) => {
 };
 
 const splitMultiLines = fileContent => {
-    const contentSplit = fileContent.split(/\r?\n/);
-    debug(`contentSplit: ${contentSplit}`);
-    return contentSplit;
-  },
-  getHTTPBody = fileContent => {
-    const content = splitMultiLines(fileContent);
-    return content[3];
-  },
-  getHTTPHeaders = fileContent => {
-    const content = splitMultiLines(fileContent);
-  },
-  getHTTPCode = fileContent => {
-    const content = splitMultiLines(fileContent);
-  },
-  getHTTPContenttype = fileContent => {
-    const content = splitMultiLines(fileContent);
-  };
+  const contentSplit = fileContent.split(/\r?\n/);
+  debug(`contentSplit: ${contentSplit}`);
+  return contentSplit;
+};
+
+const getHTTPBody = fileContent => {
+  const content = splitMultiLines(fileContent);
+  const bodyLineIndex = content.indexOf("");
+  return content[3];
+};
+
+const getHTTPHeaders = fileContent => {
+  const content = splitMultiLines(fileContent);
+};
+
+const getHTTPCode = fileContent => {
+  const firstLine = splitMultiLines(fileContent)[0];
+  const httpCode = firstLine.split(" ")[1];
+  return httpCode;
+};
+const getHTTPContenttype = fileContent => {
+  const content = splitMultiLines(fileContent);
+};
 
 const getProjectHeaderPath = apiHeaderFile => {
   let apiHeaderSplitArray = apiHeaderFile.split("/");
