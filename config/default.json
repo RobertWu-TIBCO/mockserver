@@ -5,5 +5,6 @@
     "localMockPath": "api",
     "routerMapFilename": "./routerMap.json",
     "mergeFolderHeader": true,
-    "useTestBash": true
+    "useTestBash": true,
+    "useStandardHTTP": true
 }
