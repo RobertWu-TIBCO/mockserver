@@ -1,2 +1,5 @@
 #api/
 routerMap.json
+.vscode/
+azds.yaml
+charts/

@@ -7,17 +7,17 @@ Allows custom http code, headers, body, content-type by file name and extensions
 ## mock server advantages
 
 [x] register all api base on file path and name
-[x] support http header content-type by file name extension and default content-type, i.e, "users.json" or "alter.xml"
+[x] support http header content-type by file name extension and default content-type, i.e, "users.json" or "alter.xml" set to "application/json" or "application/xml"
 [x] support file content mapping as api response body
 [ ] support response body warp base on file content
 [ ] support custom project virtual path in final api url
-[ ] support .http file as full http response
-[x] support routerMap as mock index url and show all urls in response content
-[x] support http code by file name like "gotoKC_302.json"
+[ ] support one .http file as a full http response, containing http code, headers and body
+[x] support mock index url(i.e, http://localhost:3000/mock/) to show all mock urls in response content
+[x] support http code by file name like "gotoKC_302.json", setting http code to 302
 [x] support user specific http header by file name like "gotoKc_302.header" , also inherit from "project.header" as project scope http headers
-[x] support custom mock api prefix by mockApiPrefix
-[x] support custom file scan filter by mockFileFilter
-[x] support custom path scan by localMockPath
+[x] support custom mock api prefix by mockApiPrefix in config module
+[x] support custom file scan filter by mockFileFilter in config module
+[x] support custom scan path by localMockPath in config module
 [x] support control of inherit from project header file by mergeFolderHeader
 
 ## start
@@ -30,18 +30,28 @@ nodemon app.js
 
 bash testAllApis.sh
 
+## HTTP Index only shows mapped file and mock url (ejs index may be updated in future)
+
+http://localhost:3000/mock/
+
 ## project use examples
 
 ### read user defined env variables mockFileFilter, localMockPath, mockApiPrefix to define which folder and files to scan and map to apis
 
 "mockApiPrefix": "/mock", // mock api prefix will show up in final url as prefix
 "mockFileFilter": "\*.json", // file filter, i.e, `*, *.json, *.xml`
-"localMockPath": "api", // local scan path
+"localMockPath": "api", // local scan path, set the folder to scan for api mock files
 
-local file : mapped api url
-"/api/hack/user1_302.json": "/mock/hack/user1_302.json"
+#### local file :
 
-result:
+"/api/hack/user1_302.json"
+
+#### mapped api url:
+
+"/mock/hack/user1_302.json"
+
+#### final mock url:
+
 http://localhost:3000/mock/hack/user1_302.json
 
 ### record file path and the final api url in user specified routerMapFilename
@@ -130,3 +140,5 @@ curl -vsk http://localhost:3000/mock/hack/user1_302.json
 ## TODO
 
 - support .http protocol which takes whole file as a api, containing http code, header and body
+- support custom project virtual path in final api url
+- support a good ui result(current mock index only useable if your chrome uses a plugin like JSON Viewer then you could click the mock url directly)
