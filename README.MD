@@ -6,19 +6,19 @@ Allows custom http code, headers, body, content-type by file name and extensions
 
 ## mock server advantages
 
-[x] register all api base on file path and name
-[x] support http header content-type by file name extension and default content-type, i.e, "users.json" or "alter.xml" set to "application/json" or "application/xml"
-[x] support file content mapping as api response body
-[ ] support response body warp base on file content
-[ ] support custom project virtual path in final api url
-[ ] support one .http file as a full http response, containing http code, headers and body
-[x] support mock index url(i.e, http://localhost:3000/mock/) to show all mock urls in response content
-[x] support http code by file name like "gotoKC_302.json", setting http code to 302
-[x] support user specific http header by file name like "gotoKc_302.header" , also inherit from "project.header" as project scope http headers
-[x] support custom mock api prefix by mockApiPrefix in config module
-[x] support custom file scan filter by mockFileFilter in config module
-[x] support custom scan path by localMockPath in config module
-[x] support control of inherit from project header file by mergeFolderHeader
+- [x] register all api base on file path and name
+- [x] support http header content-type by file name extension and default content-type, i.e, "users.json" or "alter.xml" set to "application/json" or "application/xml"
+- [x] support file content mapping as api response body
+- [ ] support response body warp base on file content
+- [ ] support custom project virtual path in final api url
+- [ ] support one .http file as a full http response, containing http code, headers and body
+- [x] support mock index url(i.e, http://localhost:3000/mock/) to show all mock urls in response content
+- [x] support http code by file name like "gotoKC_302.json", setting http code to 302
+- [x] support user specific http header by file name like "gotoKc_302.header" , also inherit from "project.header" as project scope http headers
+- [x] support custom mock api prefix by mockApiPrefix in config module
+- [x] support custom file scan filter by mockFileFilter in config module
+- [x] support custom scan path by localMockPath in config module
+- [x] support control of inherit from project header file by mergeFolderHeader
 
 ## start
 
