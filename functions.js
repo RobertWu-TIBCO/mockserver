@@ -29,6 +29,7 @@ const contentTypeConstsArray = [
 function containsStr(str) {
   return new RegExp(str, "ig").test(this);
 }
+// TODO: test file shows this is an array, even only one element
 const getContentTypeByFileSuffix = filePath =>
   contentTypeConstsArray.filter(e =>
     containsStr.call(e, getFileSuffix(filePath))
