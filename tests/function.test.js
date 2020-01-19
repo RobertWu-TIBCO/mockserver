@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-11 21:20:52
- * @LastEditTime : 2020-01-19 13:21:56
+ * @LastEditTime : 2020-01-19 14:01:03
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blogg:\Projects\baishan\mockserver\tests\function.test.js
@@ -17,7 +17,10 @@ describe("fp read http file and return http headers", () => {
     let content = fp.safeReadFile(filename).toString();
     debug(`content : ${content}`);
     const httpHeaders = fp.getHTTPHeaders(content);
-    expect(httpHeaders["Content-Type"]).toBe("application/json; charset=utf-8");
+    expect(httpHeaders).toBe("Content-Type: application/json; charset=utf-8");
+    const headerKV = httpHeaders.split(": ");
+    expect(headerKV[0]).toBe("Content-Type");
+    expect(headerKV[1]).toBe("application/json; charset=utf-8");
   });
 });
 

@@ -59,7 +59,7 @@ const getHTTPBody = fileContent => {
 const getHTTPHeaders = fileContent => {
   const content = splitMultiLines(fileContent);
   const httpHeaderMap = {};
-  return httpHeaderMap;
+  return content[1] || httpHeaderMap;
 };
 
 const getHTTPCode = fileContent => {
