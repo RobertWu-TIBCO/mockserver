@@ -15,7 +15,7 @@
         "nodemon": "^2.0.2"
     },
     "scripts": {
-        "test": "jest --watchAll --verbose",
+        "test": "jest --watchAll",
         "start": "node ./app.js"
     },
     "author": "",

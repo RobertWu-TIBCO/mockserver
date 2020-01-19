@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-11 21:20:52
- * @LastEditTime : 2020-01-19 14:01:03
+ * @LastEditTime : 2020-01-19 17:42:42
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \blogg:\Projects\baishan\mockserver\tests\function.test.js
@@ -19,8 +19,10 @@ describe("fp read http file and return http headers", () => {
     const httpHeaders = fp.getHTTPHeaders(content);
     expect(httpHeaders).toBe("Content-Type: application/json; charset=utf-8");
     const headerKV = httpHeaders.split(": ");
-    expect(headerKV[0]).toBe("Content-Type");
-    expect(headerKV[1]).toBe("application/json; charset=utf-8");
+    expect(headerKV).toMatchObject([
+      "Content-Type",
+      "application/json; charset=utf-8"
+    ]);
   });
 });
 
@@ -49,7 +51,9 @@ describe("fp standard http file and return body content", () => {
     debug(`content : ${content}`);
     const body = fp.getHTTPBody(content);
     debug(`body : ${body}`);
-    expect(JSON.parse(body).watchingSpace).toBe(true);
+    expect(body).toBe(
+      `{"watchingPage":true,"watchingSpace":true,"watchingBlogs":false,"isAdmin":false,"isBlogPost":false}`
+    );
   });
 });
 
