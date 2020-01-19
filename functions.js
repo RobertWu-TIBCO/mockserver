@@ -29,11 +29,14 @@ const contentTypeConstsArray = [
 function containsStr(str) {
   return new RegExp(str, "ig").test(this);
 }
-// TODO: test file shows this is an array, even only one element
-const getContentTypeByFileSuffix = filePath =>
-  contentTypeConstsArray.filter(e =>
+
+// FIXED: test file shows this is an array, even only one element
+const getContentTypeByFileSuffix = filePath => {
+  const contentType = contentTypeConstsArray.filter(e =>
     containsStr.call(e, getFileSuffix(filePath))
   );
+  return (contentType.length && contentType[0]) || defaultContentType;
+};
 
 const getHttpCodeByFilename = filePath => splitPathByUnderline(filePath)[1];
 
@@ -127,9 +130,8 @@ const genApiConf = ({ projectApiPath, item }) => {
     (containsStr.call(projectApiPath, "_") &&
       getHttpCodeByFilename(projectApiPath)) ||
     200;
-  const contentType = getContentTypeByFileSuffix(projectApiPath);
   return {
-    contentType: (contentType.length && contentType) || defaultContentType,
+    contentType: getContentTypeByFileSuffix(projectApiPath),
     headers,
     body: safeReadFile(item),
     httpCode
