@@ -144,3 +144,4 @@ curl -vsk http://localhost:3000/mock/hack/user1_302.json
 - support .http protocol which takes whole file as a api, containing http code, header and body
 - support custom project virtual path in final api url
 - support a good ui result(current mock index only useable if your chrome uses a plugin like JSON Viewer then you could click the mock url directly)
+- add UI to save mock api path, header and body. Persist to server disk file.
