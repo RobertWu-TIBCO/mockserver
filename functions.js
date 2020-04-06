@@ -53,17 +53,21 @@ const splitMultiLines = (fileContent) => {
 const getHTTPBody = (fileContent) => {
   const content = splitMultiLines(fileContent);
   const bodyLineIndex = content.indexOf("");
-  return content[3];
+  debug(`***http body line number : ${bodyLineIndex}`);
+  const httpBody = content.slice(bodyLineIndex).join("\n");
+  debug(`***parsed http protocol body : ${httpBody}`);
+  return httpBody;
 };
 
 const getHTTPHeaders = (fileContent) => {
   const content = splitMultiLines(fileContent);
+  const bodyLineIndex = content.indexOf("");
   let httpHeaderMap = {};
-  contentHeaders = [content[1]];
-  contentHeaders.forEach((e) => {
+  _.filter(content, (v, p) => p < bodyLineIndex && p > 0).forEach((e) => {
     headeKV = e.split(":");
-    httpHeaderMap[headeKV[0]] = headeKV[1];
+    httpHeaderMap[_.trim(headeKV[0])] = _.trim(headeKV[1]);
   });
+  debug(`***parsed http protocol headers: ${JSON.stringify(httpHeaderMap)}`);
   return httpHeaderMap;
 };
 
@@ -178,8 +182,8 @@ const getIpv4Ips = () => {
   return ip;
 };
 
-const getServerIp = (interface) => {
-  const ip = _(all_interfaces[interface])
+const getServerIp = (interfaceName) => {
+  const ip = _(all_interfaces[interfaceName])
     .filter((e) => /ipv4/gi.test(e.family))
     .map((e) => e.address)
     .forEach((e) => debug(`your server ip is: ${e}`));

@@ -17,12 +17,13 @@ describe("fp read http file and return http headers", () => {
     let content = fp.safeReadFile(filename).toString();
     debug(`content : ${content}`);
     const httpHeaders = fp.getHTTPHeaders(content);
-    expect(httpHeaders).toBe("Content-Type: application/json; charset=utf-8");
-    const headerKV = httpHeaders.split(": ");
-    expect(headerKV).toMatchObject([
+    expect(httpHeaders).toMatchObject({
+      "Content-Type": "application/json; charset=utf-8",
+    });
+    expect(httpHeaders).toHaveProperty(
       "Content-Type",
       "application/json; charset=utf-8"
-    ]);
+    );
   });
 });
 
@@ -51,7 +52,7 @@ describe("fp standard http file and return body content", () => {
     debug(`content : ${content}`);
     const body = fp.getHTTPBody(content);
     debug(`body : ${body}`);
-    expect(body).toBe(
+    expect(body).toMatch(
       `{"watchingPage":true,"watchingSpace":true,"watchingBlogs":false,"isAdmin":false,"isBlogPost":false}`
     );
   });
