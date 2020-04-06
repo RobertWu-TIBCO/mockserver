@@ -27,6 +27,17 @@ describe("fp read http file and return http headers", () => {
   });
 });
 
+describe("fp read http file and return http content-type header", () => {
+  it("should return content-type if input is a valid file", () => {
+    const filename =
+      "G:\\Projects\\baishan\\mockserver\\api\\hack\\kcResponse.http";
+    let content = fp.safeReadFile(filename).toString();
+    debug(`content : ${content}`);
+    const contentType = fp.getHTTPContenttype(content);
+    expect(contentType).toBe("application/json; charset=utf-8");
+  });
+});
+
 describe("fp read http file and return http code", () => {
   it("should return http code if input is a valid file", () => {
     const filename =

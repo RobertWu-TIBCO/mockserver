@@ -78,7 +78,13 @@ const getHTTPCode = (fileContent) => {
 };
 const getHTTPContenttype = (fileContent) => {
   const content = splitMultiLines(fileContent);
-  const contentType = "application/json";
+  // allows header with the same key for contentType, but only the last one takes effect
+  const contentTypeString = _.findLast(content, (v) =>
+    /content-type/gi.test(v)
+  );
+  const contentType = contentTypeString
+    ? _.trim(contentTypeString.split(":")[1])
+    : "application/json";
   return contentType;
 };
 
