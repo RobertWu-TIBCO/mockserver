@@ -163,9 +163,31 @@ const wlanIp1 =
   all_interfaces.WLAN[1] &&
   all_interfaces.WLAN[1].address;
 
+const getIpv4Ips = () => {
+  const ip = _(all_interfaces)
+    .flatMap()
+    .filter((e) => /ipv4/gi.test(e.family))
+    .map((e) => e.address)
+    .forEach((e) => console.log(` ipv4 ips : ${e}`));
+
+  return ip;
+};
+
+const getServerIp = (interface) => {
+  const ip = _(all_interfaces[interface])
+    .filter((e) => /ipv4/gi.test(e.family))
+    .map((e) => e.address)
+    .forEach((e) => debug(`your server ip is: ${e}`));
+  return ip;
+};
+
 const showWlanIp = () => {
-  const ip = ethIp || (/[a-z]/gi.test(wlanIp0) ? wlanIp1 : wlanIp0);
-  debug(`your wlan ip is: ${ip}`);
+  // const ip = ethIp || (/[a-z]/gi.test(wlanIp0) ? wlanIp1 : wlanIp0);
+  const ip = _(all_interfaces.WLAN)
+    .filter((e) => /ipv4/gi.test(e.family))
+    .map((e) => e.address)
+    .forEach((e) => debug(`your wlan ip is: ${e}`));
+  // debug(`your wlan ip is: ${ip}`);
   return ip;
 };
 
@@ -186,3 +208,5 @@ const autoParse = () => {
 };
 
 autoParse();
+
+showWlanIp();

@@ -7,5 +7,7 @@
     "mergeFolderHeader": true,
     "useTestBash": true,
     "supportHttpProtocol": true,
-    "enableRootIndexMount": true
+    "enableRootIndexMount": true,
+    "isServerWifiEnabled": true,
+    "serverNetInterfaceName": "WLAN"
 }
