@@ -1,5 +1,5 @@
 {
-    "mockApiPrefix": "/mock",
+    "mockApiPrefix": "/api",
     "defaultContentType": "application/json",
     "mockFileFilter": "*",
     "localMockPath": "api",
