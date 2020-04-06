@@ -10,10 +10,12 @@ const glob = require("glob"),
     mockFileFilter,
     localMockPath,
     routerMapFilename,
-    useTestBash
+    useTestBash,
+    enableRootIndexMount,
   } = config,
   // register route prefix
   router = new Router({ prefix: mockApiPrefix }),
+  indexRouter = new Router(),
   scanPath = `./${localMockPath}`,
   splitPathPrefix = `/${localMockPath}`,
   filterFiles = `**/${mockFileFilter}`;
@@ -27,14 +29,15 @@ glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
   router.all(projectApiPath, fp.registerApiByFolder({ projectApiPath, item }));
   // 记录路由
   // record api map to a json file with relative file path as key and the final mocked api path as value
-  const mockApiUrl = `http://${fp.showWlanIp()}:${process.env.PORT ||
-    3000}${mockApiPrefix}${projectApiPath}`;
+  const mockApiUrl = `http://${fp.showWlanIp()}:${
+    process.env.PORT || 3000
+  }${mockApiPrefix}${projectApiPath}`;
 
   routerMap[splitPathPrefix + projectApiPath] = useTestBash
     ? mockApiUrl
     : {
         localFile: item,
-        mockApiUrl
+        mockApiUrl,
       };
 });
 
@@ -42,6 +45,12 @@ fp.recordApiMap(routerMap);
 
 glob.sync(resolve("./", routerMapFilename)).forEach((item, i) => {
   router.all("/", fp.registerApiByFolder({ projectApiPath: item, item }));
+  enableRootIndexMount
+    ? indexRouter.get(
+        "/",
+        fp.registerApiByFolder({ projectApiPath: item, item })
+      )
+    : console.log(`root index mount : ${enableRootIndexMount}`);
 });
 
-module.exports = { router };
+module.exports = { router, indexRouter };

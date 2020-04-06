@@ -6,5 +6,6 @@
     "routerMapFilename": "./routerMap.json",
     "mergeFolderHeader": true,
     "useTestBash": true,
-    "useStandardHTTP": true
+    "supportHttpProtocol": true,
+    "enableRootIndexMount": true
 }

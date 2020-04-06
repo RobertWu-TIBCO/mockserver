@@ -7,23 +7,23 @@ const debug = require("debug")("mock:server"),
     defaultContentType,
     routerMapFilename,
     mergeFolderHeader,
-    useStandardHTTP
+    supportHttpProtocol,
   } = config;
 
-const splitPathByDot = filePath => _.split(filePath, ".");
-const splitPathByUnderline = filePath =>
+const splitPathByDot = (filePath) => _.split(filePath, ".");
+const splitPathByUnderline = (filePath) =>
   _.split(splitPathByDot(filePath)[0], "_");
-const getLastElement = array => array[array.length - 1];
-const getLastElementIndex = array => array.length - 1;
+const getLastElement = (array) => array[array.length - 1];
+const getLastElementIndex = (array) => array.length - 1;
 const replaceLastElement = (array, updateElement) =>
   (array[array.length - 1] = updateElement);
-const getFileSuffix = filePath => getLastElement(splitPathByDot(filePath));
+const getFileSuffix = (filePath) => getLastElement(splitPathByDot(filePath));
 const contentTypeConstsArray = [
   "application/xml",
   "application/json",
   "application/xhtml",
   "application/octet-stream",
-  "text/plain"
+  "text/plain",
 ];
 
 function containsStr(str) {
@@ -31,62 +31,62 @@ function containsStr(str) {
 }
 
 // FIXED: test file shows this is an array, even only one element
-const getContentTypeByFileSuffix = filePath => {
-  const contentType = contentTypeConstsArray.filter(e =>
+const getContentTypeByFileSuffix = (filePath) => {
+  const contentType = contentTypeConstsArray.filter((e) =>
     containsStr.call(e, getFileSuffix(filePath))
   );
   return (contentType.length && contentType[0]) || defaultContentType;
 };
 
-const getHttpCodeByFilename = filePath => splitPathByUnderline(filePath)[1];
+const getHttpCodeByFilename = (filePath) => splitPathByUnderline(filePath)[1];
 
 const addApiConfToMap = (projectApiPath, apiConf) => {
   projectApiPath: apiConf;
 };
 
-const splitMultiLines = fileContent => {
+const splitMultiLines = (fileContent) => {
   const contentSplit = fileContent.split(/\r?\n/);
   debug(`contentSplit: ${contentSplit}`);
   return contentSplit;
 };
 
-const getHTTPBody = fileContent => {
+const getHTTPBody = (fileContent) => {
   const content = splitMultiLines(fileContent);
   const bodyLineIndex = content.indexOf("");
   return content[3];
 };
 
-const getHTTPHeaders = fileContent => {
+const getHTTPHeaders = (fileContent) => {
   const content = splitMultiLines(fileContent);
   const httpHeaderMap = {};
   return content[1] || httpHeaderMap;
 };
 
-const getHTTPCode = fileContent => {
+const getHTTPCode = (fileContent) => {
   const firstLine = splitMultiLines(fileContent)[0];
   const httpCode = firstLine.split(" ")[1];
   return httpCode;
 };
-const getHTTPContenttype = fileContent => {
+const getHTTPContenttype = (fileContent) => {
   const content = splitMultiLines(fileContent);
   const contentType = "application/json";
   return contentType;
 };
 
-const getProjectHeaderPath = apiHeaderFile => {
+const getProjectHeaderPath = (apiHeaderFile) => {
   let apiHeaderSplitArray = apiHeaderFile.split("/");
   replaceLastElement(apiHeaderSplitArray, "project.header");
   return apiHeaderSplitArray.join("/");
 };
 
-const safeReadFile = filePath =>
+const safeReadFile = (filePath) =>
   fs.existsSync(filePath) && fs.readFileSync(filePath);
 
 const registerApiByFolder = ({ projectApiPath, item }) => {
   return (ctx, next) => {
     try {
       const { contentType, headers, body, httpCode } =
-        useStandardHTTP && containsStr.call(projectApiPath, ".http")
+        supportHttpProtocol && containsStr.call(projectApiPath, ".http")
           ? standardHTTP({ projectApiPath, item })
           : genApiConf({ projectApiPath, item });
       ctx.set("Access-Control-Allow-Origin", "*");
@@ -112,7 +112,7 @@ const standardHTTP = ({ projectApiPath, item }) => {
     contentType,
     headers,
     body,
-    httpCode
+    httpCode,
   };
 };
 
@@ -134,12 +134,12 @@ const genApiConf = ({ projectApiPath, item }) => {
     contentType: getContentTypeByFileSuffix(projectApiPath),
     headers,
     body: safeReadFile(item),
-    httpCode
+    httpCode,
   };
 };
 
-const recordApiMap = routerMap => {
-  fs.writeFile(routerMapFilename, JSON.stringify(routerMap, null, 4), err => {
+const recordApiMap = (routerMap) => {
+  fs.writeFile(routerMapFilename, JSON.stringify(routerMap, null, 4), (err) => {
     if (!err) {
       console.log("路由地图生成成功！");
     }
@@ -174,7 +174,7 @@ const autoParse = () => {
   const fs = require("fs");
   const program = fs.readFileSync(__filename, "utf8");
   const parsed = acorn.parse(program);
-  parsed.body.forEach(fn => {
+  parsed.body.forEach((fn) => {
     if (fn.type.endsWith("VariableDeclaration")) {
       const fnv = fn.declarations[0];
       module.exports[fnv.id.name] = eval(fnv.id.name);
