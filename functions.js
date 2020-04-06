@@ -58,8 +58,13 @@ const getHTTPBody = (fileContent) => {
 
 const getHTTPHeaders = (fileContent) => {
   const content = splitMultiLines(fileContent);
-  const httpHeaderMap = {};
-  return content[1] || httpHeaderMap;
+  let httpHeaderMap = {};
+  contentHeaders = [content[1]];
+  contentHeaders.forEach((e) => {
+    headeKV = e.split(":");
+    httpHeaderMap[headeKV[0]] = headeKV[1];
+  });
+  return httpHeaderMap;
 };
 
 const getHTTPCode = (fileContent) => {

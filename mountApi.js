@@ -49,6 +49,7 @@ fp.recordApiMap(routerMap);
 
 glob.sync(resolve("./", routerMapFilename)).forEach((item, i) => {
   router.all("/", fp.registerApiByFolder({ projectApiPath: item, item }));
+  // mount root for easy access
   enableRootIndexMount
     ? indexRouter.get(
         "/",
