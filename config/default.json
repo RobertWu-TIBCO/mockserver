@@ -10,5 +10,7 @@
     "enableRootIndexMount": true,
     "useProjectVirtualPath": true,
     "isServerWifiEnabled": true,
-    "serverNetInterfaceName": "WLAN"
+    "serverNetInterfaceName": "WLAN",
+    "hideFileFilter": ["header", "virtualPath", "code"],
+    "enableHideFileFilter": false
 }

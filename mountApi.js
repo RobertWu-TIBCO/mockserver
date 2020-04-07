@@ -15,6 +15,8 @@ const glob = require("glob"),
     isServerWifiEnabled,
     serverNetInterfaceName,
     useProjectVirtualPath,
+    hideFileFilter,
+    enableHideFileFilter,
   } = config,
   // register route prefix
   router = new Router({ prefix: mockApiPrefix }),
@@ -27,15 +29,23 @@ debug(
   `mockFileFilter : ${mockFileFilter}, localMockPath : ${localMockPath}, mockApiPrefix : ${mockApiPrefix}`
 );
 glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
+  // hide api setting files
+  if (enableHideFileFilter && hideFileFilter.includes(item.split(".")[1]))
+    return;
+
+  const shouldUseVPath =
+    useProjectVirtualPath && fp.existsProjectVirtualPath(item);
+
   // item:  "g:/Projects/baishan/mockserver/api/hack"
   // projectApiPath : "/hack"
   let projectApiPath = item && item.split(splitPathPrefix)[1];
-  let shouldUseVPath =
-    useProjectVirtualPath && fp.existsProjectVirtualPath(item);
+
   projectApiPath = shouldUseVPath
     ? fp.getProjectVirtualPath(item)
     : projectApiPath;
+
   debug(`item : ${item},  projectApiPath: ${projectApiPath}`);
+
   router.all(projectApiPath, fp.registerApiByFolder({ projectApiPath, item }));
   // 记录路由
   // record api map to a json file with relative file path as key and the final mocked api path as value
