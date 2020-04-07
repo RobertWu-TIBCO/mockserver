@@ -14,6 +14,7 @@ const glob = require("glob"),
     enableRootIndexMount,
     isServerWifiEnabled,
     serverNetInterfaceName,
+    useProjectVirtualPath,
   } = config,
   // register route prefix
   router = new Router({ prefix: mockApiPrefix }),
@@ -26,7 +27,14 @@ debug(
   `mockFileFilter : ${mockFileFilter}, localMockPath : ${localMockPath}, mockApiPrefix : ${mockApiPrefix}`
 );
 glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
-  const projectApiPath = item && item.split(splitPathPrefix)[1];
+  // item:  "g:/Projects/baishan/mockserver/api/hack"
+  // projectApiPath : "/hack"
+  let projectApiPath = item && item.split(splitPathPrefix)[1];
+  let shouldUseVPath =
+    useProjectVirtualPath && fp.existsProjectVirtualPath(item);
+  projectApiPath = shouldUseVPath
+    ? fp.getProjectVirtualPath(item)
+    : projectApiPath;
   debug(`item : ${item},  projectApiPath: ${projectApiPath}`);
   router.all(projectApiPath, fp.registerApiByFolder({ projectApiPath, item }));
   // 记录路由

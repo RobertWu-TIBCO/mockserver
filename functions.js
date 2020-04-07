@@ -94,6 +94,28 @@ const getProjectHeaderPath = (apiHeaderFile) => {
   return apiHeaderSplitArray.join("/");
 };
 
+const getProjectVirtualPathFilename = (item) => {
+  let apiFileSplitArray = item.split("/");
+  replaceLastElement(apiFileSplitArray, "project.virtualPath");
+  return apiFileSplitArray.join("/");
+};
+
+const existsProjectVirtualPath = (item) => {
+  const vPathFile = getProjectVirtualPathFilename(item);
+  return fs.existsSync(vPathFile);
+};
+
+const getProjectVirtualPath = (item) => {
+  const vPathFile = getProjectVirtualPathFilename(item);
+  let apiFileSplitArray = item.split("/");
+  return (
+    "/" +
+    safeReadFile(vPathFile).toString() +
+    "/" +
+    getLastElement(apiFileSplitArray)
+  );
+};
+
 const safeReadFile = (filePath) =>
   fs.existsSync(filePath) && fs.readFileSync(filePath);
 

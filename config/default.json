@@ -8,6 +8,7 @@
     "useTestBash": true,
     "supportHttpProtocol": true,
     "enableRootIndexMount": true,
+    "useProjectVirtualPath": true,
     "isServerWifiEnabled": true,
     "serverNetInterfaceName": "WLAN"
 }

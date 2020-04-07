@@ -10,6 +10,37 @@ const debug = require("debug")("mock:server"),
   fp = require("../functions"),
   fs = require("fs");
 
+describe("fp safeReadFile should show file content", () => {
+  it("match file content when read a file", () => {
+    const rs = fp
+      .safeReadFile(
+        "G:/Projects/baishan/mockserver/api/hack/project.virtualPath"
+      )
+      .toString();
+    expect(rs).toBe("mock/robert/dev");
+  });
+});
+
+describe("fp should show project virtual path file content", () => {
+  it("should return correct vPath file content", () => {
+    const vPath = fp.getProjectVirtualPath(
+      "G:/Projects/baishan/mockserver/api/hack/kcResponse.http"
+    );
+    expect(vPath).toBe("mock/robert/dev");
+  });
+});
+
+describe("fp should show project virtual path filename", () => {
+  it("should return correct vPath filename", () => {
+    const vPathFilename = fp.getProjectVirtualPathFilename(
+      "G:/Projects/baishan/mockserver/api/hack/kcResponse.http"
+    );
+    expect(vPathFilename).toBe(
+      "G:/Projects/baishan/mockserver/api/hack/project.virtualPath"
+    );
+  });
+});
+
 describe("fp read http file and return http headers", () => {
   it("should return http headers if input is a valid file", () => {
     const filename =
