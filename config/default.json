@@ -1,5 +1,5 @@
 {
-    "mockApiPrefix": "/api",
+    "mockApiPrefix": "",
     "defaultContentType": "application/json",
     "mockFileFilter": "*",
     "localMockPath": "api",
@@ -12,5 +12,5 @@
     "isServerWifiEnabled": true,
     "serverNetInterfaceName": "WLAN",
     "hideFileFilter": ["header", "virtualPath", "code"],
-    "enableHideFileFilter": false
+    "enableHideFileFilter": true
 }
