@@ -1,1 +1,0 @@
-cat routerMap.json |grep :|cut -d: -f2|cut -d"," -f1|tr -s '"' ' '|while read api;do echo $api;done|while read apipath;do echo $apipath && echo curl -vsk http://localhost:3000$apipath && curl -vsk http://localhost:3000$apipath && echo -e "\n";done
