@@ -13,5 +13,13 @@
     "serverNetInterfaceName": "WLAN",
     "hideFileFilter": ["header", "virtualPath", "code"],
     "enableHideFileFilter": true,
-    "enableHttpCodeSupportByFilename": false
+    "enableHttpCodeSupportByFilename": false,
+    "contentTypeConstsArray": [
+        "text/html",
+        "text/plain",
+        "application/xml",
+        "application/json",
+        "application/xhtml",
+        "application/octet-stream"
+    ]
 }

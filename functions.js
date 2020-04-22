@@ -9,6 +9,7 @@ const debug = require("debug")("mock:server"),
     mergeFolderHeader,
     supportHttpProtocol,
     enableHttpCodeSupportByFilename,
+    contentTypeConstsArray,
   } = config;
 
 const splitPathByDot = (filePath) => _.split(filePath, ".");
@@ -19,14 +20,6 @@ const getLastElementIndex = (array) => array.length - 1;
 const replaceLastElement = (array, updateElement) =>
   (array[array.length - 1] = updateElement);
 const getFileSuffix = (filePath) => getLastElement(splitPathByDot(filePath));
-const contentTypeConstsArray = [
-  "text/html",
-  "application/xml",
-  "application/json",
-  "application/xhtml",
-  "application/octet-stream",
-  "text/plain",
-];
 
 function containsStr(str) {
   return new RegExp(str, "ig").test(this);
