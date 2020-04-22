@@ -10,8 +10,9 @@ Allows custom http code, headers, body, content-type by file name and extensions
 - [x] support http header content-type by file name extension and default content-type, i.e, "users.json" or "alter.xml" set to "application/json" or "application/xml"
 - [x] support file content mapping as api response body
 - [ ] support response body warp base on file content
-- [ ] support custom project virtual path in final api url
-- [ ] support one .http file as a full http response, containing http code, headers and body
+- [ ] support user defined delimiter to get httpCode from filename, i.e, dot instead of underline
+- [x] support custom project virtual path in final api url
+- [x] support one .http file as a full http response, containing http code, headers and body
 - [x] support mock index url(i.e, http://localhost:3000/mock/) to show all mock urls in response content
 - [x] support http code by file name like "gotoKC_302.json", setting http code to 302
 - [x] support user specific http header by file name like "gotoKc_302.header" , also inherit from "project.header" as project scope http headers
@@ -141,7 +142,9 @@ curl -vsk http://localhost:3000/mock/hack/user1_302.json
 
 ## TODO
 
-- support .http protocol which takes whole file as a api, containing http code, header and body
-- support custom project virtual path in final api url
+- support .http protocol which takes whole file as a api, containing http code, header and body (done)
+- support custom project virtual path in final api url (done)
 - support a good ui result(current mock index only useable if your chrome uses a plugin like JSON Viewer then you could click the mock url directly)
 - add UI to save mock api path, header and body. Persist to server disk file.
+<!-- - add option for different file path delimiter when support httpCode by filename. i.e,"\_","." etc -->
+- support user defined delimiter to get httpCode from filename, i.e, dot instead of underline
