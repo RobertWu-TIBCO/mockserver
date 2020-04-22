@@ -1,0 +1,25 @@
+{
+    "mockApiPrefix": "",
+    "defaultContentType": "application/json",
+    "mockFileFilter": "**/*html",
+    "localMockPath": "api/nifiComponentDoc",
+    "routerMapFilename": "./routerMap_nifiComponentDoc.json",
+    "mergeFolderHeader": true,
+    "useTestBash": true,
+    "supportHttpProtocol": true,
+    "enableRootIndexMount": true,
+    "useProjectVirtualPath": true,
+    "isServerWifiEnabled": true,
+    "serverNetInterfaceName": "WLAN",
+    "hideFileFilter": ["header", "virtualPath", "code"],
+    "enableHideFileFilter": true,
+    "enableHttpCodeSupportByFilename": false,
+    "contentTypeConstsArray": [
+        "text/html",
+        "text/plain",
+        "application/xml",
+        "application/json",
+        "application/xhtml",
+        "application/octet-stream"
+    ]
+}

@@ -23,15 +23,27 @@ Allows custom http code, headers, body, content-type by file name and extensions
 
 ## start
 
+```
 npm install
 
 npm i -g nodemon
 
 nodemon app.js
+```
+
+## start with different NODE_ENV
+
+```
+PORT=3000 NODE_ENV=orchsymDoc npm start
+PORT=4000 NODE_ENV=nifiDoc npm start
+PORT=5000 NODE_ENV=nifiComponentDoc npm start
+PORT=8000 NODE_ENV=api npm start
+PORT=9000 NODE_ENV=allFolders npm start
+```
 
 ## test apis
 
-bash testAllApis.sh
+`bash testAllApis.sh`
 
 ## HTTP Index only shows mapped file and mock url (ejs index may be updated in future)
 
@@ -41,9 +53,16 @@ http://localhost:3000/mock/
 
 ### read user defined env variables mockFileFilter, localMockPath, mockApiPrefix to define which folder and files to scan and map to apis
 
-"mockApiPrefix": "/mock", // mock api prefix will show up in final url as prefix
-"mockFileFilter": "\*.json", // file filter, i.e, `*, *.json, *.xml`
-"localMockPath": "api", // local scan path, set the folder to scan for api mock files
+```
+// mock api prefix will show up in final url as prefix
+"mockApiPrefix": "/mock",
+
+// file filter, i.e, `*, *.json, *.xml`
+"mockFileFilter": "\*.json",
+
+// local scan path, set the folder to scan for api mock files
+"localMockPath": "api",
+```
 
 #### local file :
 
@@ -59,16 +78,17 @@ http://localhost:3000/mock/hack/user1_302.json
 
 ### record file path and the final api url in user specified routerMapFilename
 
-i.e,
-"routerMapFilename": "./routerMap.json",
+> i.e,
+> "routerMapFilename": "./routerMap.json",
 
 ### set http header Content-Type by file extension or the defaultContentType
 
-i.e,
-"/api/hack/user1_302.json", get "Content-Type: application/json"
+> i.e,
+> "/api/hack/user1_302.json", get "Content-Type: application/json"
 
 ### set final api url with mockApiPrefix and the full file name, including the file extension
 
+```
 "mockApiPrefix": "/mock", // mock api prefix will show up in final url as prefix
 
 local file : mapped api url
@@ -76,12 +96,14 @@ local file : mapped api url
 
 result:
 http://localhost:3000/mock/hack/user1_302.json
+```
 
 ### set api http header by api file base name related ".header", also inherit from "project.header" file
 
 i.e,
-user1_302.json
-user1_302.header
+
+- user1_302.json
+- user1_302.header
 
 #### header content
 

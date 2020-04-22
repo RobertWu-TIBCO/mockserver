@@ -1,0 +1,25 @@
+{
+    "mockApiPrefix": "",
+    "defaultContentType": "application/json",
+    "mockFileFilter": "*",
+    "localMockPath": "api",
+    "routerMapFilename": "./routerMap_api.json",
+    "mergeFolderHeader": true,
+    "useTestBash": true,
+    "supportHttpProtocol": true,
+    "enableRootIndexMount": true,
+    "useProjectVirtualPath": true,
+    "isServerWifiEnabled": true,
+    "serverNetInterfaceName": "WLAN",
+    "hideFileFilter": ["header", "virtualPath", "code"],
+    "enableHideFileFilter": true,
+    "enableHttpCodeSupportByFilename": true,
+    "contentTypeConstsArray": [
+        "text/html",
+        "text/plain",
+        "application/xml",
+        "application/json",
+        "application/xhtml",
+        "application/octet-stream"
+    ]
+}

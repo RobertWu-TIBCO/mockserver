@@ -4,6 +4,8 @@
         ".git",
         "dist",
         ".cache",
+        "routerMap*.json",
+        "**/**/*html",
         "routerMap.json",
         "readme.md",
         "node_modules/**/node_modules"

@@ -1,0 +1,11 @@
+{
+    "/api/nifiDoc/administration-guide.html": "http://:4000/administration-guide.html",
+    "/api/nifiDoc/developer-guide.html": "http://:4000/developer-guide.html",
+    "/api/nifiDoc/expression-language-guide.html": "http://:4000/expression-language-guide.html",
+    "/api/nifiDoc/getting-started.html": "http://:4000/getting-started.html",
+    "/api/nifiDoc/nifi-in-depth.html": "http://:4000/nifi-in-depth.html",
+    "/api/nifiDoc/overview.html": "http://:4000/overview.html",
+    "/api/nifiDoc/record-path-guide.html": "http://:4000/record-path-guide.html",
+    "/api/nifiDoc/toolkit-guide.html": "http://:4000/toolkit-guide.html",
+    "/api/nifiDoc/user-guide.html": "http://:4000/user-guide.html"
+}
