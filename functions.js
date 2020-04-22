@@ -8,6 +8,7 @@ const debug = require("debug")("mock:server"),
     routerMapFilename,
     mergeFolderHeader,
     supportHttpProtocol,
+    enableHttpCodeSupportByFilename,
   } = config;
 
 const splitPathByDot = (filePath) => _.split(filePath, ".");
@@ -19,6 +20,7 @@ const replaceLastElement = (array, updateElement) =>
   (array[array.length - 1] = updateElement);
 const getFileSuffix = (filePath) => getLastElement(splitPathByDot(filePath));
 const contentTypeConstsArray = [
+  "text/html",
   "application/xml",
   "application/json",
   "application/xhtml",
@@ -123,7 +125,7 @@ const registerApiByFolder = ({ projectApiPath, item }) => {
   return (ctx, next) => {
     try {
       const { contentType, headers, body, httpCode } =
-        supportHttpProtocol && containsStr.call(projectApiPath, ".http")
+        supportHttpProtocol && containsStr.call(projectApiPath, "\\.http")
           ? standardHTTP({ projectApiPath, item })
           : genApiConf({ projectApiPath, item });
       ctx.set("Access-Control-Allow-Origin", "*");
@@ -164,7 +166,8 @@ const genApiConf = ({ projectApiPath, item }) => {
   const headers = _.assign(folderHeaderObj, headerObj);
   // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
-    (containsStr.call(projectApiPath, "_") &&
+    (enableHttpCodeSupportByFilename &&
+      containsStr.call(projectApiPath, "_") &&
       getHttpCodeByFilename(projectApiPath)) ||
     200;
   return {

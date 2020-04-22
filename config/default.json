@@ -1,8 +1,8 @@
 {
     "mockApiPrefix": "",
     "defaultContentType": "application/json",
-    "mockFileFilter": "*",
-    "localMockPath": "api",
+    "mockFileFilter": "**/*html",
+    "localMockPath": "api/orchsymDoc",
     "routerMapFilename": "./routerMap.json",
     "mergeFolderHeader": true,
     "useTestBash": true,
@@ -12,5 +12,6 @@
     "isServerWifiEnabled": true,
     "serverNetInterfaceName": "WLAN",
     "hideFileFilter": ["header", "virtualPath", "code"],
-    "enableHideFileFilter": true
+    "enableHideFileFilter": true,
+    "enableHttpCodeSupportByFilename": false
 }
