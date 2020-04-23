@@ -160,7 +160,7 @@ const genApiConf = ({ projectApiPath, item }) => {
   // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
     (enableHttpCodeSupportByFilename &&
-      containsStr.call(projectApiPath, "_") &&
+      containsStr.call(projectApiPath, "_") && !containsStr.call(projectApiPath, routerMapFilename) &&
       getHttpCodeByFilename(projectApiPath)) ||
     200;
   return {
