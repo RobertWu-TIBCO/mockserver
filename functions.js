@@ -225,6 +225,18 @@ const showWlanIp = () => {
   return ip;
 };
 
+function exists(path) {
+  return fs.existsSync(path) || path.existsSync(path);
+}
+
+function isFile(path) {
+  return exists(path) && fs.statSync(path).isFile();
+}
+
+function isDir(path) {
+  return exists(path) && fs.statSync(path).isDirectory();
+}
+
 const mountTopLevelIndex = (routerMap) => {
   return (ctx, next) => {
     try {

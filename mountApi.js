@@ -30,6 +30,8 @@ debug(
   `mockFileFilter : ${mockFileFilter}, localMockPath : ${localMockPath}, mockApiPrefix : ${mockApiPrefix}`
 );
 glob.sync(resolve(scanPath, filterFiles)).forEach((item, i) => {
+  // if is dir then return
+  if (fp.isDir(item)) return;
   // hide api setting files
   if (enableHideFileFilter && hideFileFilter.includes(item.split(".")[1]))
     return;
@@ -75,6 +77,14 @@ glob.sync(resolve("./", routerMapFilename)).forEach((item, i) => {
         fp.registerApiByFolder({ projectApiPath: item, item })
       )
     : console.log(`root index /apis mount : ${enableRootIndexMount}`);
+
+  // mount / only if mock api prefix used
+  mockApiPrefix
+    ? indexRouter.get(
+        "/",
+        fp.registerApiByFolder({ projectApiPath: item, item })
+      )
+    : console.log(`root index / already mounted `);
 });
 
 enableTopLevelIndexMount
