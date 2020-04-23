@@ -17,6 +17,7 @@ const glob = require("glob"),
     useProjectVirtualPath,
     hideFileFilter,
     enableHideFileFilter,
+    enableTopLevelIndexMount,
   } = config,
   // register route prefix
   router = new Router({ prefix: mockApiPrefix }),
@@ -70,10 +71,14 @@ glob.sync(resolve("./", routerMapFilename)).forEach((item, i) => {
   // mount root for easy access
   enableRootIndexMount
     ? indexRouter.get(
-        "/",
+        "/apis",
         fp.registerApiByFolder({ projectApiPath: item, item })
       )
-    : console.log(`root index mount : ${enableRootIndexMount}`);
+    : console.log(`root index /apis mount : ${enableRootIndexMount}`);
 });
+
+enableTopLevelIndexMount
+  ? indexRouter.get("/top", fp.mountTopLevelIndex(routerMap))
+  : console.log(`root index /top mount : ${enableTopLevelIndexMount}`);
 
 module.exports = { router, indexRouter };

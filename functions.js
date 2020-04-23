@@ -160,7 +160,8 @@ const genApiConf = ({ projectApiPath, item }) => {
   // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
     (enableHttpCodeSupportByFilename &&
-      containsStr.call(projectApiPath, "_") && !containsStr.call(projectApiPath, routerMapFilename) &&
+      containsStr.call(projectApiPath, "_") &&
+      !containsStr.call(projectApiPath, routerMapFilename) &&
       getHttpCodeByFilename(projectApiPath)) ||
     200;
   return {
@@ -222,6 +223,24 @@ const showWlanIp = () => {
     .forEach((e) => debug(`your wlan ip is: ${e}`));
   // debug(`your wlan ip is: ${ip}`);
   return ip;
+};
+
+const mountTopLevelIndex = (routerMap) => {
+  return (ctx, next) => {
+    try {
+      const topLevelLinkMap = _.pickBy(
+        routerMap,
+        (v, k) => /:[0-9]+\/[^/]+$/.test(v)
+        // (v, k) => /^\/[^/]+$/.test(k)
+      );
+      ctx.set("Access-Control-Allow-Origin", "*");
+      // ctx.res.setHeader("Content-Type", "application/json");
+      ctx.body = topLevelLinkMap;
+      // ctx.res.statusCode = 200;
+    } catch (err) {
+      ctx.throw(`服务器错误 : ${JSON.stringify(err)}`, 500);
+    }
+  };
 };
 
 const autoParse = () => {

@@ -170,3 +170,5 @@ curl -vsk http://localhost:3000/mock/hack/user1_302.json
 - add UI to save mock api path, header and body. Persist to server disk file.
 <!-- - add option for different file path delimiter when support httpCode by filename. i.e,"\_","." etc -->
 - support user defined delimiter to get httpCode from filename, i.e, dot instead of underline
+- support hide folder type link
+- support only show top level link in index root and hide child level link in other routes

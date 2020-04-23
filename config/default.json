@@ -21,5 +21,6 @@
         "application/json",
         "application/xhtml",
         "application/octet-stream"
-    ]
+    ],
+    "enableTopLevelIndexMount": true
 }
