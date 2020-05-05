@@ -11,4 +11,4 @@ mock_ps=$(netstat -anot |grep :|grep -m1 $PORT)
 echo kill mock_ps $mock_ps
 mock_pid=$(netstat -anot |grep :|grep -m1 $PORT|awk '{print $5}')
 echo kill mock_pid $mock_pid
-echo kill9 $mock_pid
+kill -9 $mock_pid

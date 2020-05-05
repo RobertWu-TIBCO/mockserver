@@ -8,8 +8,22 @@
  */
 const debug = require("debug")("mock:server"),
   fp = require("../functions"),
+  _ = require("lodash"),
   fs = require("fs");
 
+describe("genApiConf would return correct api mock info", () => {
+  it("should return http header correctly even the api header file is not in json format", () => {
+    const { contentType, headers, body, httpCode } = fp.genApiConf({
+      projectApiPath: "/httpheader/testCvteKong.json",
+      item: "g:/Projects/baishan/mockserver/api/httpheader/testCvteKong.json",
+    });
+    expect(contentType).toBe("application/json");
+    expect(httpCode).toBe(200);
+    expect(headers).toHaveProperty("Location", "https://www.baidu.com");
+    // body is bytes
+    // expect(body).toHaveProperty("Address", "Beijing");
+  });
+});
 describe("fp safeReadFile should show file content", () => {
   it("match file content when read a file", () => {
     const rs = fp
@@ -106,6 +120,29 @@ describe("fp parse file path and return http code", () => {
       "g:\\Projects\\baishan\\mockserver\\api\\hack\\goToKC_401.json";
     let httpCode = fp.getHttpCodeByFilename(filename);
     expect(httpCode).toBe("401");
+  });
+});
+
+describe("fp parse file and header conetnt to return http headers", () => {
+  it("should return http headers if header file is http protocol format", () => {
+    const filename =
+      "G:\\Projects\\baishan\\mockserver\\api\\cvte\\bak\\httpformat.header";
+    const content = fp.safeReadFile(filename).toString();
+    console.log(` http format header : ${content}`);
+    const httpHeaders = fp.getHTTPHeaders_supportRawHeader(content);
+    expect(httpHeaders).toHaveProperty("Location", "https://www.baidu.com");
+  });
+  it("should return http headers if header file contains a json object", () => {
+    const apiHeaderFile =
+      "g:\\Projects\\baishan\\mockserver\\api\\hack\\goToKC_401.header";
+    const headerStr = fp.safeReadFile(apiHeaderFile);
+    debug(`headerStr: ${headerStr}`);
+    const folderHeaderFile = fp.getProjectHeaderPath(apiHeaderFile);
+    const folderHeaderStr = fp.safeReadFile(folderHeaderFile);
+    const headerObj = JSON.parse(headerStr),
+      folderHeaderObj = JSON.parse(folderHeaderStr);
+    const httpHeaders = _.assign(folderHeaderObj, headerObj);
+    expect(httpHeaders).toHaveProperty("x-auth", "wuwufa1992l");
   });
 });
 

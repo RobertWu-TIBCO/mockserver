@@ -19,6 +19,9 @@ const getLastElement = (array) => array[array.length - 1];
 const getLastElementIndex = (array) => array.length - 1;
 const replaceLastElement = (array, updateElement) =>
   (array[array.length - 1] = updateElement);
+
+const replaceFirstElement = (array, updateElement) =>
+  (array[0] = updateElement);
 const getFileSuffix = (filePath) => getLastElement(splitPathByDot(filePath));
 
 function containsStr(str) {
@@ -54,13 +57,32 @@ const getHTTPBody = (fileContent) => {
   return httpBody;
 };
 
+const getHTTPHeaders_supportRawHeader = (fileContent) => {
+  const content = splitMultiLines(fileContent);
+  let httpHeaderMap = {};
+  _.forEach(content, (e) => {
+    headeKV = e.split(":");
+    httpHeaderMap[_.trim(headeKV[0])] = _(headeKV)
+      .filter((v, k) => k > 0)
+      .join(":")
+      .trim();
+  });
+  debug(`***parsed http protocol headers: ${JSON.stringify(httpHeaderMap)}`);
+  return httpHeaderMap;
+};
+
 const getHTTPHeaders = (fileContent) => {
   const content = splitMultiLines(fileContent);
   const bodyLineIndex = content.indexOf("");
   let httpHeaderMap = {};
   _.filter(content, (v, p) => p < bodyLineIndex && p > 0).forEach((e) => {
     headeKV = e.split(":");
-    httpHeaderMap[_.trim(headeKV[0])] = _.trim(headeKV[1]);
+    // fix the bug if http header value has `:` then it is splited
+    // httpHeaderMap[_.trim(headeKV[0])] = _.trim(headeKV[1]);
+    httpHeaderMap[_.trim(headeKV[0])] = _(headeKV)
+      .filter((v, k) => k > 0)
+      .join(":")
+      .trim();
   });
   debug(`***parsed http protocol headers: ${JSON.stringify(httpHeaderMap)}`);
   return httpHeaderMap;
@@ -154,8 +176,19 @@ const genApiConf = ({ projectApiPath, item }) => {
   debug(`headerStr: ${headerStr}`);
   const folderHeaderFile = getProjectHeaderPath(apiHeaderFile);
   const folderHeaderStr = mergeFolderHeader && safeReadFile(folderHeaderFile);
-  const headerObj = JSON.parse(headerStr),
-    folderHeaderObj = JSON.parse(folderHeaderStr);
+  let headerObj;
+  let folderHeaderObj;
+  try {
+    // headerObj = JSON.parse(headerStr);
+    // folderHeaderObj = JSON.parse(folderHeaderStr);
+    headerObj = headerStr.toJSON();
+    folderHeaderObj = folderHeaderStr.toJSON();
+  } catch (e) {
+    headerObj = getHTTPHeaders_supportRawHeader(headerStr.toString());
+    folderHeaderObj = getHTTPHeaders_supportRawHeader(
+      folderHeaderStr.toString()
+    );
+  }
   const headers = _.assign(folderHeaderObj, headerObj);
   // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
