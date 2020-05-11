@@ -9,6 +9,7 @@
 const debug = require("debug")("mock:server"),
   fp = require("../functions"),
   _ = require("lodash"),
+  isJson = require("C:\\Users\\Administrator\\AppData\\Local\\Yarn\\Cache\\v6\\npm-validator-10.11.0-003108ea6e9a9874d31ccc9e5006856ccd76b228-integrity\\node_modules\\validator\\lib\\isJSON.js"),
   fs = require("fs");
 
 describe("genApiConf would return correct api mock info", () => {
@@ -40,7 +41,9 @@ describe("fp should show project virtual path file content", () => {
     const vPath = fp.getProjectVirtualPath(
       "G:/Projects/baishan/mockserver/api/hack/kcResponse.http"
     );
-    expect(vPath).toBe("mock/robert/dev");
+    // the final api url
+    expect(vPath).toBe("/mock/robert/dev/kcResponse.http");
+    // expect(vPath).toBe("mock/robert/dev");
   });
 });
 
@@ -123,26 +126,35 @@ describe("fp parse file path and return http code", () => {
   });
 });
 
+describe("test if file content is json or not", () => {
+  it("return false if file content is not json ", () => {
+    const filename = "g:\\Projects\\baishan\\mockserver\\api\\hack\\empty.json";
+    const filecontent = fp.safeReadFile(filename).toString();
+    const rs = isJson(filecontent);
+    expect(rs).toBe(false);
+  });
+  it("return true if file content is json ", () => {
+    const filename =
+      "g:\\Projects\\baishan\\mockserver\\api\\hack\\project.header";
+    const filecontent = fp.safeReadFile(filename).toString();
+    const rs = isJson(filecontent);
+    expect(rs).toBe(true);
+  });
+});
 describe("fp parse file and header conetnt to return http headers", () => {
+  it("should return http headers if header file contains json", () => {
+    const filename =
+      "G:\\Projects\\baishan\\mockserver\\api\\cvte\\bak\\testCvteKong.header";
+    const httpHeaders = fp.parseJsonFormatHeader(filename);
+    expect(httpHeaders).toHaveProperty("Location", "https://www.baidu.com");
+  });
   it("should return http headers if header file is http protocol format", () => {
     const filename =
       "G:\\Projects\\baishan\\mockserver\\api\\cvte\\bak\\httpformat.header";
     const content = fp.safeReadFile(filename).toString();
     console.log(` http format header : ${content}`);
-    const httpHeaders = fp.getHTTPHeaders_supportRawHeader(content);
+    const httpHeaders = fp.parseHttpRawHeaderFormat(content);
     expect(httpHeaders).toHaveProperty("Location", "https://www.baidu.com");
-  });
-  it("should return http headers if header file contains a json object", () => {
-    const apiHeaderFile =
-      "g:\\Projects\\baishan\\mockserver\\api\\hack\\goToKC_401.header";
-    const headerStr = fp.safeReadFile(apiHeaderFile);
-    debug(`headerStr: ${headerStr}`);
-    const folderHeaderFile = fp.getProjectHeaderPath(apiHeaderFile);
-    const folderHeaderStr = fp.safeReadFile(folderHeaderFile);
-    const headerObj = JSON.parse(headerStr),
-      folderHeaderObj = JSON.parse(folderHeaderStr);
-    const httpHeaders = _.assign(folderHeaderObj, headerObj);
-    expect(httpHeaders).toHaveProperty("x-auth", "wuwufa1992l");
   });
 });
 
@@ -166,5 +178,74 @@ describe("fp return a valid content-type base on filename suffix", () => {
       "g:\\Projects\\baishan\\mockserver\\api\\hack\\goToKC_401.json";
     const result = fp.getContentTypeByFileSuffix(filename);
     expect(result).toBe("application/json");
+  });
+});
+
+describe("fp return warning if file content is empty instead of returning false", () => {
+  it("return empty string if file does not exist", () => {
+    const filename =
+      "g:\\Projects\\baishan\\mockserver\\api\\hack\\noSuchFile.json";
+    const rs = fp.safeReadFile(filename).toString();
+    expect(rs).toBe("");
+  });
+  it("return file content if file has one line", () => {
+    const filename =
+      "g:\\Projects\\baishan\\mockserver\\api\\hack\\oneline.json";
+    const rs = fp.safeReadFile(filename).toString();
+    expect(rs).toMatch("test content");
+  });
+  it("return empty string instead of false if file exists but has no content", () => {
+    const filename = "g:\\Projects\\baishan\\mockserver\\api\\hack\\empty.json";
+    const rs = fp.safeReadFile(filename).toString();
+    expect(rs).toBe("");
+  });
+});
+
+describe("should return correct http headers for an item", () => {
+  it("should return http headers if project header file contains a json object", () => {
+    const item = "C:\\faster\\mockserver_dev\\api\\hack\\project.header";
+    const httpHeaders = fp.parseJsonFormatHeader(item);
+    expect(httpHeaders).toHaveProperty("x-iac-token", "robert_iac");
+  });
+  it("should return http headers if header file contains a json object", () => {
+    const item = "C:\\faster\\mockserver_dev\\api\\hack\\goToKC_401.header";
+    const httpHeaders = fp.parseJsonFormatHeader(item);
+    expect(httpHeaders).toHaveProperty("x-auth", "wuwufa1992l");
+  });
+  it("should return http headers if header file contains a json object", () => {
+    let item = "C:\\faster\\mockserver_dev\\api\\hack\\goToKC_401.header";
+    const httpHeaders_item = fp.parseJsonFormatHeader(item);
+    item = "C:\\faster\\mockserver_dev\\api\\hack\\project.header";
+    const httpHeaders_project = fp.parseJsonFormatHeader(item);
+    const httpHeaders = _.assign(httpHeaders_item, httpHeaders_project);
+    expect(httpHeaders).toHaveProperty("x-auth", "wuwufa1992l");
+    expect(httpHeaders).toHaveProperty("x-iac-token", "robert_iac");
+  });
+  it("should return http headers if item has header file or project header file in http format", () => {
+    const item = "C:/faster/mockserver_dev/api/hack/goToKC_401.json";
+    const httpHeaders = fp.getItemHTTPHeaders(item);
+    expect(httpHeaders).toHaveProperty("x-auth", "wuwufa1992l");
+    expect(httpHeaders).toHaveProperty("x-iac-token", "robert_iac");
+  });
+
+  it("should return valid http headers and project headers if both header file exist and have json as content", () => {});
+});
+
+describe("get valid project or header file path for a valid item", () => {
+  it("getProjectHeaderPath should return a valid project header file path", () => {
+    const item =
+      "g:/Projects/baishan/mockserver/api/httpheader/testCvteKong.json";
+    const item_projectHeader = fp.getProjectHeaderPath(item);
+    expect(item_projectHeader).toBe(
+      "g:/Projects/baishan/mockserver/api/httpheader/project.header"
+    );
+  });
+});
+
+describe("return item file path stat info", () => {
+  it("if item is a folder link, should return the info", () => {
+    const item = "g:/Projects/baishan/mockserver/api/nifiDoc";
+    const rs = fp.isFile(item);
+    expect(rs).toBe(false);
   });
 });

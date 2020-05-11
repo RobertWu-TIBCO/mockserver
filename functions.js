@@ -3,6 +3,7 @@ const debug = require("debug")("mock:server"),
   fs = require("fs"),
   os = require("os"),
   _ = require("lodash"),
+  isJson = require("C:\\Users\\Administrator\\AppData\\Local\\Yarn\\Cache\\v6\\npm-validator-10.11.0-003108ea6e9a9874d31ccc9e5006856ccd76b228-integrity\\node_modules\\validator\\lib\\isJSON.js"),
   {
     defaultContentType,
     routerMapFilename,
@@ -57,34 +58,41 @@ const getHTTPBody = (fileContent) => {
   return httpBody;
 };
 
-const getHTTPHeaders_supportRawHeader = (fileContent) => {
+const parseHttpRawHeaderFormat = (fileContent) => {
+  if (_.isEmpty(fileContent)) return {};
   const content = splitMultiLines(fileContent);
   let httpHeaderMap = {};
-  _.forEach(content, (e) => {
-    headeKV = e.split(":");
-    httpHeaderMap[_.trim(headeKV[0])] = _(headeKV)
-      .filter((v, k) => k > 0)
-      .join(":")
-      .trim();
-  });
-  debug(`***parsed http protocol headers: ${JSON.stringify(httpHeaderMap)}`);
+  _(content)
+    .reject((e) => _.isEmpty(e))
+    .forEach((e) => {
+      headeKV = e.split(":");
+      httpHeaderMap[_.trim(headeKV[0])] = _(headeKV)
+        .filter((v, k) => k > 0)
+        .join(":")
+        .trim();
+    });
+  debug(`***parseHttpRawHeaderFormat: ${JSON.stringify(httpHeaderMap)}`);
   return httpHeaderMap;
 };
 
+// name bug : the function name mislead you to use it deal with a json file content , in fact it reads a .http file !
 const getHTTPHeaders = (fileContent) => {
   const content = splitMultiLines(fileContent);
   const bodyLineIndex = content.indexOf("");
   let httpHeaderMap = {};
-  _.filter(content, (v, p) => p < bodyLineIndex && p > 0).forEach((e) => {
-    headeKV = e.split(":");
-    // fix the bug if http header value has `:` then it is splited
-    // httpHeaderMap[_.trim(headeKV[0])] = _.trim(headeKV[1]);
-    httpHeaderMap[_.trim(headeKV[0])] = _(headeKV)
-      .filter((v, k) => k > 0)
-      .join(":")
-      .trim();
-  });
-  debug(`***parsed http protocol headers: ${JSON.stringify(httpHeaderMap)}`);
+  _(content)
+    .reject((e) => _.isEmpty(e))
+    .filter((v, p) => p < bodyLineIndex && p > 0)
+    .forEach((e) => {
+      headeKV = e.split(":");
+      // fix the bug if http header value has `:` then it is splited
+      // httpHeaderMap[_.trim(headeKV[0])] = _.trim(headeKV[1]);
+      httpHeaderMap[_.trim(headeKV[0])] = _(headeKV)
+        .filter((v, k) => k > 0)
+        .join(":")
+        .trim();
+    });
+  debug(`***HTTP Protocol getHTTPHeaders: ${JSON.stringify(httpHeaderMap)}`);
   return httpHeaderMap;
 };
 
@@ -134,7 +142,7 @@ const getProjectVirtualPath = (item) => {
 };
 
 const safeReadFile = (filePath) =>
-  fs.existsSync(filePath) && fs.readFileSync(filePath);
+  (fs.existsSync(filePath) && fs.readFileSync(filePath)) || "";
 
 const registerApiByFolder = ({ projectApiPath, item }) => {
   return (ctx, next) => {
@@ -171,25 +179,7 @@ const standardHTTP = ({ projectApiPath, item }) => {
 };
 
 const genApiConf = ({ projectApiPath, item }) => {
-  const apiHeaderFile = item.split(".")[0] + ".header";
-  const headerStr = safeReadFile(apiHeaderFile);
-  debug(`headerStr: ${headerStr}`);
-  const folderHeaderFile = getProjectHeaderPath(apiHeaderFile);
-  const folderHeaderStr = mergeFolderHeader && safeReadFile(folderHeaderFile);
-  let headerObj;
-  let folderHeaderObj;
-  try {
-    // headerObj = JSON.parse(headerStr);
-    // folderHeaderObj = JSON.parse(folderHeaderStr);
-    headerObj = headerStr.toJSON();
-    folderHeaderObj = folderHeaderStr.toJSON();
-  } catch (e) {
-    headerObj = getHTTPHeaders_supportRawHeader(headerStr.toString());
-    folderHeaderObj = getHTTPHeaders_supportRawHeader(
-      folderHeaderStr.toString()
-    );
-  }
-  const headers = _.assign(folderHeaderObj, headerObj);
+  const headers = getItemHTTPHeaders(item);
   // _ is used only for httpCode and should not appear in apiPath
   const httpCode =
     (enableHttpCodeSupportByFilename &&
@@ -203,6 +193,30 @@ const genApiConf = ({ projectApiPath, item }) => {
     body: safeReadFile(item),
     httpCode,
   };
+};
+
+const parseJsonFormatHeader = (headerFile) => {
+  const headerStr = safeReadFile(headerFile).toString();
+  return (isJson(headerStr) && JSON.parse(headerStr)) || {};
+};
+
+const getItemHTTPHeaders = (item) => {
+  const apiHeaderFile = item.split(".")[0] + ".header";
+  const folderHeaderFile = getProjectHeaderPath(apiHeaderFile);
+  const headerStr = safeReadFile(apiHeaderFile).toString();
+  debug(`headerStr: ${headerStr}`);
+  let folderHeaderObj = {};
+  let headerObj =
+    (isJson(headerStr) && parseJsonFormatHeader(apiHeaderFile)) ||
+    parseHttpRawHeaderFormat(headerStr);
+  if (mergeFolderHeader) {
+    const folderHeaderStr = safeReadFile(folderHeaderFile).toString();
+    folderHeaderObj =
+      (isJson(folderHeaderStr) && parseJsonFormatHeader(folderHeaderFile)) ||
+      parseHttpRawHeaderFormat(folderHeaderStr);
+  }
+  const headers = _.assign(folderHeaderObj, headerObj);
+  return headers;
 };
 
 const recordApiMap = (routerMap) => {
