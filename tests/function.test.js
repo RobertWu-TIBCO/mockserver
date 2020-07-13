@@ -26,7 +26,9 @@ describe("fp should show project virtual path file content", () => {
     const vPath = fp.getProjectVirtualPath(
       "G:/Projects/baishan/mockserver/api/hack/kcResponse.http"
     );
-    expect(vPath).toBe("mock/robert/dev");
+    // the final api url
+    expect(vPath).toBe("/mock/robert/dev/kcResponse.http");
+    // expect(vPath).toBe("mock/robert/dev");
   });
 });
 
