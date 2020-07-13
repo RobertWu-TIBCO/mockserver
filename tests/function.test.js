@@ -190,12 +190,13 @@ describe("fp return warning if file content is empty instead of returning false"
   });
   it("return file content if file has one line", () => {
     const filename =
-      "g:\\Projects\\baishan\\mockserver\\api\\hack\\oneline.json";
+      "g:\\Projects\\baishan\\mockserver_hdd\\api\\hack\\oneline.json";
     const rs = fp.safeReadFile(filename).toString();
     expect(rs).toMatch("test content");
   });
   it("return empty string instead of false if file exists but has no content", () => {
-    const filename = "g:\\Projects\\baishan\\mockserver\\api\\hack\\empty.json";
+    const filename =
+      "g:\\Projects\\baishan\\mockserver_hdd\\api\\hack\\empty.json";
     const rs = fp.safeReadFile(filename).toString();
     expect(rs).toBe("");
   });

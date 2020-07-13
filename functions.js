@@ -264,7 +264,7 @@ const getServerIp = (interfaceName) => {
 
 const showWlanIp = () => {
   // const ip = ethIp || (/[a-z]/gi.test(wlanIp0) ? wlanIp1 : wlanIp0);
-  const ip = _(all_interfaces.WLAN)
+  const ip = _(all_interfaces["WLAN 5"])
     .filter((e) => /ipv4/gi.test(e.family))
     .map((e) => e.address)
     .forEach((e) => debug(`your wlan ip is: ${e}`));
