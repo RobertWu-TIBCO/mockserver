@@ -172,3 +172,11 @@ curl -vsk http://localhost:3000/mock/hack/user1_302.json
 - support user defined delimiter to get httpCode from filename, i.e, dot instead of underline
 - support hide folder type link
 - support only show top level link in index root and hide child level link in other routes
+
+## Experienced Issues
+
+- when start the project by `nodemon`, as you add a `.http` api mock file to any folder, `nodemon` is not rescanning the file to make the `startup` process again, hence the new api mock file is not `mocked` to an api
+
+- test and find out that `.http` file not triggering nodemon to restart project, but `.json` file does
+
+- note `.http` file as api would not inherit project.header since it should not need anything else from its `.http` file content itself
