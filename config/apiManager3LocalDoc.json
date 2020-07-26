@@ -1,9 +1,9 @@
 {
     "mockApiPrefix": "",
     "defaultContentType": "application/json",
-    "mockFileFilter": "**/*html",
-    "localMockPath": "api/nifiDoc",
-    "routerMapFilename": "./routerMap_nifiDoc.json",
+    "mockFileFilter": "*",
+    "localMockPath": "api/apiManager3LocalDoc",
+    "routerMapFilename": "./routerMap_apiManager3LocalDoc.json",
     "mergeFolderHeader": true,
     "useTestBash": true,
     "supportHttpProtocol": true,
