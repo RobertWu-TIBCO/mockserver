@@ -13,7 +13,7 @@
     "serverNetInterfaceName": "WLAN 5",
     "hideFileFilter": ["header", "virtualPath", "code"],
     "enableHideFileFilter": true,
-    "enableHttpCodeSupportByFilename": false,
+    "enableHttpCodeSupportByFilename": true,
     "contentTypeConstsArray": [
         "text/html",
         "text/plain",
